@@ -1,3 +1,29 @@
+*/
+!Lab*/
+*.docx
+*.sch
+lm4f120.s
+tm4c123gh6pm.s
+*.pdf
+
+# uVision Generated Files
+*.axf
+*.htm
+*.Inp
+*.map
+*.tra
+*.dep
+*.__i
+*.crf
+*.d
+*.o
+*.lst
+*.lnp
+*.bak
+0x*
+FLASH
+SRAM
+
 # Object files
 *.o
 *.ko
