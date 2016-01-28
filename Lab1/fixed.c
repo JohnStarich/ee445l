@@ -6,25 +6,27 @@
 
 #include "ST7735.h"
 #include "stdio.h"
+#include <stdlib.h>
 
 void ST7735_sDecOut3(int32_t n) {
 	if(n > 9999 || n < -9999) {
 		printf(" *.***");
 		return;
 	}
-	if(n < 0) {
-		printf("-");
-	}
-	else {
+	if(n >= 0) {
 		printf(" ");
 	}
-	printf("%d.%d\n", n / 1000, n % 1000);
+	else {
+		printf("-");
+	}
+	printf("%d.%03d", abs(n / 1000), abs(n % 1000));
 }
 
 uint32_t toBinFix(uint32_t n) {
 	//n = n * 1000 / 256;
 	//n = n * 125 / 32;
 	n = (n * 125) >> 5;
+	// remove this if statement to remove rounding
 	if (n % 10 >= 5) {
 		n += 10;
 	}
@@ -33,19 +35,19 @@ uint32_t toBinFix(uint32_t n) {
 }
 
 void ST7735_uBinOut8(uint32_t n) {
-	if(n > 256000) {
+	if(n >= 256000) {
 		printf("***.**");
 		return;
 	}
 	n = toBinFix(n);
 	//99999 / 10000 = 9
-	if(n / 10000 == 0) {
-		printf(" ");
-	}
-	if(n / 1000 == 0) {
-		printf(" ");
-	}
-	printf("%d.%d\n", n / 100, n % 100);
+//	if(n / 10000 == 0) {
+//		printf(" ");
+//	}
+//	if(n / 1000 == 0) {
+//		printf(" ");
+//	}
+	printf("%3u.%02u", n / 100, n % 100);
 }
 
 int32_t gminX, gmaxX, gminY, gmaxY;
@@ -61,17 +63,25 @@ void ST7735_XYplotInit(char *title, int32_t minX, int32_t maxX, int32_t minY, in
 	gmaxY = maxY;
 }
 
+int32_t constrain(int32_t coordinate, int32_t lowerBound, int32_t upperBound) {
+	int m, b;
+	b = (lowerBound + upperBound) / 2;
+	return coordinate * b / 2000 + b;
+}
+
 void ST7735_XYplot(uint32_t num, int32_t bufX[], int32_t bufY[]) {
-	uint32_t i;
+	uint32_t i, mappedX, mappedY;
 	uint32_t currentX = 0;
 	for(i = 0; i < num; i += 1) {
 		if (bufX[i] > gmaxX || bufX[i] < gminX || bufY[i] > gmaxY || bufY[i] < gminY) {
 			continue;
 		}
-		while(currentX != bufX[i]) {
+		mappedX = constrain(bufX[i], 0, 127);
+		mappedY = bufY[i];//constrain(bufY[i], 32, 159);
+		while(currentX != mappedX) {
 			ST7735_PlotNext();
 			currentX = (currentX + 1) % gmaxX;
 		}
-		ST7735_PlotPoint(bufY[i]);
+		ST7735_PlotPoint(mappedY);
 	}
 }
