@@ -7,11 +7,6 @@
 #include "ST7735.h"
 #include "stdio.h"
 
-int fputc(int ch, FILE *f){ // Print a character to ST7735 LCD
-	ST7735_OutChar(ch);
-	return 1;
-}
-
 void ST7735_sDecOut3(int32_t n) {
 	if(n > 9999 || n < -9999) {
 		printf(" *.***");
@@ -53,7 +48,7 @@ void ST7735_uBinOut8(uint32_t n) {
 	printf("%d.%d\n", n / 100, n % 100);
 }
 
-int32_t gminX, int32_t gmaxX, int32_t gminY, int32_t gmaxY;
+int32_t gminX, gmaxX, gminY, gmaxY;
 
 void ST7735_XYplotInit(char *title, int32_t minX, int32_t maxX, int32_t minY, int32_t maxY) {
 	ST7735_InitR(INITR_REDTAB);
@@ -67,7 +62,7 @@ void ST7735_XYplotInit(char *title, int32_t minX, int32_t maxX, int32_t minY, in
 }
 
 void ST7735_XYplot(uint32_t num, int32_t bufX[], int32_t bufY[]) {
-	uint32_t i, x, y;
+	uint32_t i;
 	uint32_t currentX = 0;
 	for(i = 0; i < num; i += 1) {
 		if (bufX[i] > gmaxX || bufX[i] < gminX || bufY[i] > gmaxY || bufY[i] < gminY) {
