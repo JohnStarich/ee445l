@@ -64,24 +64,19 @@ void ST7735_XYplotInit(char *title, int32_t minX, int32_t maxX, int32_t minY, in
 }
 
 int32_t constrain(int32_t coordinate, int32_t lowerBound, int32_t upperBound) {
-	int m, b;
+	int32_t b;
 	b = (lowerBound + upperBound) / 2;
 	return coordinate * b / 2000 + b;
 }
 
 void ST7735_XYplot(uint32_t num, int32_t bufX[], int32_t bufY[]) {
 	uint32_t i, mappedX, mappedY;
-	uint32_t currentX = 0;
 	for(i = 0; i < num; i += 1) {
 		if (bufX[i] > gmaxX || bufX[i] < gminX || bufY[i] > gmaxY || bufY[i] < gminY) {
 			continue;
 		}
-		mappedX = constrain(bufX[i], 0, 127);
-		mappedY = bufY[i];//constrain(bufY[i], 32, 159);
-		while(currentX != mappedX) {
-			ST7735_PlotNext();
-			currentX = (currentX + 1) % gmaxX;
-		}
-		ST7735_PlotPoint(mappedY);
+		mappedX = (127*(bufX[i]-gminX))/(gmaxX-gminX);
+		mappedY = 32+(127*(gmaxY-bufY[i]))/(gmaxY-gminY);
+		ST7735_DrawPixel(mappedX, mappedY, 0xFFFF);
 	}
 }
