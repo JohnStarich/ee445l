@@ -61,13 +61,23 @@ void Timer0A_Init100HzInt(void){
   NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; // top 3 bits
   NVIC_EN0_R = 1<<19;              // enable interrupt 19 in NVIC
 }
+
+uint32_t currentIndex = 0, timestamps[1000], adcValues[1000];
+
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
   PF2 ^= 0x04;                   // profile
   PF2 ^= 0x04;                   // profile
   ADCvalue = ADC0_InSeq3();
   PF2 ^= 0x04;                   // profile
+
+  if(currentIndex < 1000) {
+    timestamps[currentIndex] = TIMER1_TAR_R;
+    adcValues[currentIndex] = ADCvalue;
+    currentIndex += 1;
+  }
 }
+
 int main(void){
   PLL_Init(Bus80MHz);                   // 80 MHz
   SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
@@ -79,11 +89,29 @@ int main(void){
                                         // configure PF2 as GPIO
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF00F)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
-  PF2 = 0;                      // turn off LED
+  PF2 = 0;                              // turn off LED
   EnableInterrupts();
-  while(1){
+  while(currentIndex < 1000){
     PF1 ^= 0x02;  // toggles when running in main
   }
+	/* process data in arrays */
+	// put time difference in first 999 locations
+	for(int i = 0; i < 1000 - 1; i += 1) {
+		timestamps[i] -= timestamps[i + 1];
+	}
+	// find smallest and largest differences
+	uint32_t smallest = timestamps[0];
+	uint32_t largest = timestamps[0];
+	for(int i = 1; i < 1000 - 1; i += 1) {
+		if(timestamps[i] < smallest) {
+			smallest = timestamps[i];
+		}
+		else if(timestamps[i] > largest) {
+			largest = timestamps[i];
+		}
+	}
+	uint32_t timeJitter = largest - smallest;
+	// if time jitter is larger than 10ms then we have a problem
 }
 
 
