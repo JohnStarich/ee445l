@@ -7,6 +7,7 @@ tm4c123gh6pm.s
 *.pdf
 
 # uVision Generated Files
+*.uvgui.*
 *.axf
 *.htm
 *.Inp
