@@ -1,8 +1,11 @@
-// filename ******** fixed.h ************** 
-// possible header file for Lab 1 
-// feel free to change the specific syntax of your system
-// put your name here
-// put the date here
+/* ******** fixed.h ************** 
+ * Jon Ambrose and John Starich
+ * 01-30-2016
+ * Fixed point display functions and plot functions.
+ * Lab 1
+ * Mahesh
+ * 01-31-2016
+ */
 
 
 /****************ST7735_sDecOut3***************

@@ -30,6 +30,9 @@ SRAM
 *.obj
 *.elf
 
+# OSX files
+.DS_Store
+
 # Precompiled Headers
 *.gch
 *.pch
