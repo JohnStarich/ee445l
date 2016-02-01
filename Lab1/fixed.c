@@ -40,33 +40,19 @@ void ST7735_uBinOut8(uint32_t n) {
 		return;
 	}
 	n = toBinFix(n);
-	//99999 / 10000 = 9
-//	if(n / 10000 == 0) {
-//		printf(" ");
-//	}
-//	if(n / 1000 == 0) {
-//		printf(" ");
-//	}
 	printf("%3u.%02u", n / 100, n % 100);
 }
 
 int32_t gminX, gmaxX, gminY, gmaxY;
 
 void ST7735_XYplotInit(char *title, int32_t minX, int32_t maxX, int32_t minY, int32_t maxY) {
-	ST7735_InitR(INITR_REDTAB);
-  ST7735_FillScreen(0);  // set screen to black
+	ST7735_FillScreen(0);  // set screen to black
   ST7735_SetCursor(0,0);
 	printf("%s\n", title);
 	gminX = minX;
 	gmaxX = maxX;
 	gminY = minY;
 	gmaxY = maxY;
-}
-
-int32_t constrain(int32_t coordinate, int32_t lowerBound, int32_t upperBound) {
-	int32_t b;
-	b = (lowerBound + upperBound) / 2;
-	return coordinate * b / 2000 + b;
 }
 
 void ST7735_XYplot(uint32_t num, int32_t bufX[], int32_t bufY[]) {
@@ -77,6 +63,6 @@ void ST7735_XYplot(uint32_t num, int32_t bufX[], int32_t bufY[]) {
 		}
 		mappedX = (127*(bufX[i]-gminX))/(gmaxX-gminX);
 		mappedY = 32+(127*(gmaxY-bufY[i]))/(gmaxY-gminY);
-		ST7735_DrawPixel(mappedX, mappedY, 0xFFFF);
+		ST7735_DrawPixel(mappedX, mappedY, ST7735_BLUE);
 	}
 }
