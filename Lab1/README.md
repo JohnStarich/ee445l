@@ -1,11 +1,13 @@
-# Objectives
+# Lab 1: Fixed-point Output
+
+## Objectives
 
 In this lab we are becoming familiar with our microcontroller, the TI TM4C123. Specifically we will be learning how to work with fixed point operations as well as our display, the ST7735.
 
 The primary objectives are to display fixed-point decimal numbers, unsigned binary fixed-point numbers, and plot two shapes on the screen.
 
 
-# Analysis and Discussion
+## Analysis and Discussion
 
 In a call graph representing our system, we would do well to minimize the number of arrows in order to keep our system as close to real-time as we can.
 
