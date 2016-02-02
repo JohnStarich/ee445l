@@ -97,7 +97,7 @@ int main(void){
 	/* process data in arrays */
 	// put time difference in first 999 locations
 	for(int i = 0; i < 1000 - 1; i += 1) {
-		timestamps[i] -= timestamps[i + 1];
+		timestamps[i] = timestamps[i + 1] - timestamps[i];
 	}
 	// find smallest and largest differences
 	uint32_t smallest = timestamps[0];
