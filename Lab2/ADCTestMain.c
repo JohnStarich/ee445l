@@ -84,6 +84,7 @@ int main(void){
   SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   ADC0_InitSWTriggerSeq3_Ch9();         // allow time to finish activating
   Timer0A_Init100HzInt();               // set up Timer0A for 100 Hz interrupts
+	Timer1_Init();												// set up Timer1 for 12.5ns interval counting
   GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
   GPIO_PORTF_AFSEL_R &= ~0x06;          // disable alt funct on PF2, PF1
   GPIO_PORTF_DEN_R |= 0x06;             // enable digital I/O on PF2, PF1
@@ -97,22 +98,41 @@ int main(void){
   }
 	/* process data in arrays */
 	// put time difference in first 999 locations
+	DisableInterrupts();
 	for(int i = 0; i < 1000 - 1; i += 1) {
 		timestamps[i] = timestamps[i + 1] - timestamps[i];
 	}
 	// find smallest and largest differences
-	uint32_t smallest = timestamps[0];
-	uint32_t largest = timestamps[0];
+	uint32_t smallestTime = timestamps[0];
+	uint32_t largestTime = timestamps[0];
+	uint32_t smallestADC = adcValues[0];
+	uint32_t largestADC = adcValues[0];
+	//uint32_t adc_value_label[40];
+	uint32_t histogram[4096];
+	
 	for(int i = 1; i < 1000 - 1; i += 1) {
-		if(timestamps[i] < smallest) {
-			smallest = timestamps[i];
+		if(timestamps[i] < smallestTime) {
+			smallestTime = timestamps[i];
 		}
-		else if(timestamps[i] > largest) {
-			largest = timestamps[i];
+		else if(timestamps[i] > largestTime) {
+			largestTime = timestamps[i];
 		}
 	}
-	uint32_t timeJitter = largest - smallest;
+	
+	uint32_t timeJitter = largestTime - smallestTime;
 	// if time jitter is larger than 10ms then we have a problem
+	
+	for(int i = 1; i < 4096; i += 1) {
+		histogram[i] = 0;
+	}
+	
+	for(int i = 1; i < 1000; i += 1) {
+		histogram[adcValues[i]] += 1;
+		if(adcValues[i] < smallestADC) {
+			smallestADC = adcValues[i];
+		}
+		else if(adcValues[i] > largestADC) {
+			largestADC = adcValues[i];
+		}
+	}
 }
-
-
