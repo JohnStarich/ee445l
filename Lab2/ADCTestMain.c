@@ -42,6 +42,16 @@ void WaitForInterrupt(void);  // low power mode
 volatile uint32_t ADCvalue;
 // This debug function initializes Timer0A to request interrupts
 // at a 100 Hz frequency.  It is similar to FreqMeasure.c.
+
+uint32_t currentIndex = 0;
+uint32_t timestamps[1000] = { 0 }, adcValues[1000];
+uint32_t smallestTime = 0xFFFFFFFF;
+uint32_t largestTime = 0;
+uint32_t smallestADC = 0xFFFFFFFF;
+uint32_t largestADC = 0;
+uint32_t histogram[4096];
+//Globals that contain the index for the Timer0A ISR, and array for timestamp and ADC values
+
 void Timer0A_Init100HzInt(void){
   volatile uint32_t delay;
   DisableInterrupts();
@@ -63,8 +73,6 @@ void Timer0A_Init100HzInt(void){
   NVIC_EN0_R = 1<<19;              // enable interrupt 19 in NVIC
 }
 
-uint32_t currentIndex = 0, timestamps[1000], adcValues[1000];
-
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
   PF2 ^= 0x04;                   // profile
@@ -80,11 +88,12 @@ void Timer0A_Handler(void){
 }
 
 int main(void){
+	DisableInterrupts();
   PLL_Init(Bus80MHz);                   // 80 MHz
   SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   ADC0_InitSWTriggerSeq3_Ch9();         // allow time to finish activating
-  Timer0A_Init100HzInt();               // set up Timer0A for 100 Hz interrupts
 	Timer1_Init();												// set up Timer1 for 12.5ns interval counting
+  Timer0A_Init100HzInt();               // set up Timer0A for 100 Hz interrupts
   GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
   GPIO_PORTF_AFSEL_R &= ~0x06;          // disable alt funct on PF2, PF1
   GPIO_PORTF_DEN_R |= 0x06;             // enable digital I/O on PF2, PF1
@@ -93,23 +102,20 @@ int main(void){
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF2 = 0;                              // turn off LED
   EnableInterrupts();
-  while(currentIndex < 1000){
+	
+	while(currentIndex < 1000){
     PF1 ^= 0x02;  // toggles when running in main
-  }
+	} // Toggles heartbeat while ADC is collecting data
+	
 	/* process data in arrays */
 	// put time difference in first 999 locations
 	DisableInterrupts();
+	
 	for(int i = 0; i < 1000 - 1; i += 1) {
 		timestamps[i] = timestamps[i + 1] - timestamps[i];
 	}
-	// find smallest and largest differences
-	uint32_t smallestTime = timestamps[0];
-	uint32_t largestTime = timestamps[0];
-	uint32_t smallestADC = adcValues[0];
-	uint32_t largestADC = adcValues[0];
-	//uint32_t adc_value_label[40];
-	uint32_t histogram[4096];
 	
+	// find smallest and largest differences
 	for(int i = 1; i < 1000 - 1; i += 1) {
 		if(timestamps[i] < smallestTime) {
 			smallestTime = timestamps[i];
