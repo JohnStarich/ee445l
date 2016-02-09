@@ -61,3 +61,6 @@ SRAM
 # Debug files
 *.dSYM/
 Lab2/Lab02.doc
+Lab2/arrayValues.log
+*.log
+Lab2/logValues.ini
