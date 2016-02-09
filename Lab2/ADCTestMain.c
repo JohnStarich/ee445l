@@ -44,12 +44,14 @@ volatile uint32_t ADCvalue;
 // at a 100 Hz frequency.  It is similar to FreqMeasure.c.
 
 uint32_t currentIndex = 0;
-uint32_t timestamps[1000] = { 0 }, adcValues[1000];
+uint32_t timestamps[1000] = { 0 }, adcValues[1000] = { 0 };
 uint32_t smallestTime = 0xFFFFFFFF;
 uint32_t largestTime = 0;
 uint32_t smallestADC = 0xFFFFFFFF;
 uint32_t largestADC = 0;
-uint32_t histogram[4096];
+uint32_t histogram[4096] = { 0 };
+uint32_t deltaTime;
+uint32_t timeJitter;
 //Globals that contain the index for the Timer0A ISR, and array for timestamp and ADC values
 
 void Timer0A_Init100HzInt(void){
@@ -88,11 +90,10 @@ void Timer0A_Handler(void){
 }
 
 int main(void){
-	DisableInterrupts();
+	DisableInterrupts();									// disable interrupts while configuring
   PLL_Init(Bus80MHz);                   // 80 MHz
   SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   ADC0_InitSWTriggerSeq3_Ch9();         // allow time to finish activating
-	Timer1_Init();												// set up Timer1 for 12.5ns interval counting
   Timer0A_Init100HzInt();               // set up Timer0A for 100 Hz interrupts
   GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
   GPIO_PORTF_AFSEL_R &= ~0x06;          // disable alt funct on PF2, PF1
@@ -101,36 +102,31 @@ int main(void){
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF00F)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF2 = 0;                              // turn off LED
-  EnableInterrupts();
+  Timer1_Init();												// set up Timer1 for 12.5ns interval counting
+	EnableInterrupts();
 	
 	while(currentIndex < 1000){
-    PF1 ^= 0x02;  // toggles when running in main
+    PF1 ^= 0x02;
 	} // Toggles heartbeat while ADC is collecting data
 	
-	/* process data in arrays */
-	// put time difference in first 999 locations
-	DisableInterrupts();
+	DisableInterrupts(); // disable data collection
+	
+	/* PROCESS DATA */
+		/* Calculate delta Time for each timestamp pair, then calculate the Time Jitter */
 	
 	for(int i = 0; i < 1000 - 1; i += 1) {
-		timestamps[i] = timestamps[i + 1] - timestamps[i];
-	}
-	
-	// find smallest and largest differences
-	for(int i = 1; i < 1000 - 1; i += 1) {
-		if(timestamps[i] < smallestTime) {
-			smallestTime = timestamps[i];
+		deltaTime = timestamps[i] - timestamps[i + 1];
+		if(deltaTime < smallestTime) {
+			smallestTime = deltaTime;
 		}
-		else if(timestamps[i] > largestTime) {
-			largestTime = timestamps[i];
-		}
+		if(deltaTime > largestTime) {
+			largestTime = deltaTime;
+		}	
 	}
+
+	timeJitter = largestTime - smallestTime;  // if time jitter is larger than 10ms then we have a problem
 	
-	uint32_t timeJitter = largestTime - smallestTime;
-	// if time jitter is larger than 10ms then we have a problem
-	
-	for(int i = 1; i < 4096; i += 1) {
-		histogram[i] = 0;
-	}
+		/* Sum up discrete ADC values for histogram plot */
 	
 	for(int i = 1; i < 1000; i += 1) {
 		histogram[adcValues[i]] += 1;
@@ -140,5 +136,6 @@ int main(void){
 		else if(adcValues[i] > largestADC) {
 			largestADC = adcValues[i];
 		}
-	}
+	} // histgram array now contains the count for every possible adc value for display on the LCD
 }
+// End of Main
