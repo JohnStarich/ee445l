@@ -1,7 +1,6 @@
 */
 !Lab*/
 *.docx
-*.sch
 lm4f120.s
 tm4c123gh6pm.s
 *.pdf
@@ -60,7 +59,6 @@ SRAM
 
 # Debug files
 *.dSYM/
-Lab2/Lab02.doc
-Lab2/arrayValues.log
+*.doc
 *.log
-Lab2/logValues.ini
+*.ini
