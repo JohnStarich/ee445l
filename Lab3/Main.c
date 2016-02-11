@@ -24,11 +24,13 @@
 #include "PLL.h"
 #include "ST7735.h"
 #include <stdio.h>
+#include "Bool.h"
+#include "Buttons.h"
+#include "Graphics.h"
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
-#define TRUE						1
-#define FALSE						0
+
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
@@ -36,8 +38,13 @@ void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
 /***** GLOBAL VARIABLES *****/
-uint32_t Systick_one_sec = FALSE;				// semaphore for one second intervals updated by the Systick Timer.
+uint32_t Systick_one_sec = false;				// semaphore for one second intervals updated by the Systick Timer.
 /****************************/
+
+int32_t hourXLocations[24] = {0, 20};
+int32_t hourYLocations[24] = {0, 20};
+int32_t minuteXLocations[24] = {0, 20};
+int32_t minuteYLocations[24] = {0, 20};
 
 int main(void){
 	DisableInterrupts();									// disable interrupts while configuring
@@ -53,13 +60,19 @@ int main(void){
 	ST7735_InitR(INITR_REDTAB);
 	EnableInterrupts();
 
+	Buttons_Init();
 	while (1) {
-		Systick_one_sec = FALSE;						// acknowledge the systick semaphore
+		Systick_one_sec = true;						// acknowledge the systick semaphore
 
+		Buttons_ReadInput();
+		Graphics_DrawCircle();
+		//TODO: offset to center later
+		//draw hour hand
+		Graphics_DrawLine(0, 0, hourXLocations[Buttons_Hours()], hourYLocations[Buttons_Hours()]);
+		//draw minute hand
+		Graphics_DrawLine(0, 0, minuteXLocations[Buttons_Hours()], minuteYLocations[Buttons_Hours()]);
 
-		
-		
-		while(Systick_one_sec == FALSE);		// wait for systick timer then run main loop
+		while(Systick_one_sec == false);		// wait for systick timer then run main loop
 	}
 }
 // End of Main
