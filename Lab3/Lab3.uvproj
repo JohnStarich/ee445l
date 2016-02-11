@@ -438,6 +438,46 @@
               <FileType>5</FileType>
               <FilePath>.\SysTick.h</FilePath>
             </File>
+            <File>
+              <FileName>Speaker.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Speaker.c</FilePath>
+            </File>
+            <File>
+              <FileName>Buttons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Buttons.c</FilePath>
+            </File>
+            <File>
+              <FileName>Buttons.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Buttons.h</FilePath>
+            </File>
+            <File>
+              <FileName>Speaker.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Speaker.h</FilePath>
+            </File>
+            <File>
+              <FileName>Timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timers.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Timers.h</FilePath>
+            </File>
+            <File>
+              <FileName>Graphics.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Graphics.c</FilePath>
+            </File>
+            <File>
+              <FileName>Graphics.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Graphics.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

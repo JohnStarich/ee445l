@@ -27,24 +27,17 @@
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
+#define TRUE						1
+#define FALSE						0
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
-
-void Draw_Line(int16_t startX, int16_t startY, int16_t endX, int16_t endY) {
-	
-	for(int16_t x = startX; x < endX; x += 1) {
-		ST7735_DrawPixel(x, startY, ST7735_BLUE);
-	}
-	
-	for(int16_t y = startY; y < endY; y += 1) {
-		ST7735_DrawPixel(startX, y, ST7735_BLUE);
-	}
-	
-}
+/***** GLOBAL VARIABLES *****/
+uint32_t Systick_one_sec = FALSE;				// semaphore for one second intervals updated by the Systick Timer.
+/****************************/
 
 int main(void){
 	DisableInterrupts();									// disable interrupts while configuring
@@ -60,8 +53,13 @@ int main(void){
 	ST7735_InitR(INITR_REDTAB);
 	EnableInterrupts();
 
+	while (1) {
+		Systick_one_sec = FALSE;						// acknowledge the systick semaphore
 
-	Draw_Line(10,10,50,50);
 
+		
+		
+		while(Systick_one_sec == FALSE);		// wait for systick timer then run main loop
+	}
 }
 // End of Main

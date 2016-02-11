@@ -13,6 +13,9 @@
 // Daniel Valvano
 // September 11, 2013
 
+// Modified by Jon Ambrose and John Starich
+// Feb 10, 2016
+
 /* This example accompanies the books
    "Embedded Systems: Introduction to ARM Cortex M Microcontrollers",
    ISBN: 978-1469998749, Jonathan Valvano, copyright (c) 2014
@@ -36,6 +39,9 @@
 
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void);
+
+// Systick Interupt Handler
+void SysTick_Handler(void);
 
 // Time delay using busy wait.
 // The delay parameter is in units of the core clock. (units of 20 nsec for 50 MHz clock)

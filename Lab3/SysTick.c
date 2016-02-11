@@ -13,6 +13,9 @@
 // Daniel Valvano
 // September 11, 2013
 
+// Modified by Jon Ambrose and John Starich
+// Feb 10, 2016
+
 /* This example accompanies the books
    "Embedded Systems: Introduction to ARM Cortex M Microcontrollers",
    ISBN: 978-1469998749, Jonathan Valvano, copyright (c) 2015
@@ -41,6 +44,8 @@
 #define NVIC_ST_CTRL_INTEN      0x00000002  // Interrupt enable
 #define NVIC_ST_CTRL_ENABLE     0x00000001  // Counter mode
 #define NVIC_ST_RELOAD_M        0x00FFFFFF  // Counter load value
+#define TRUE										1
+#define FALSE										0
 
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void){
@@ -50,6 +55,14 @@ void SysTick_Init(void){
                                         // enable SysTick with core clock
   NVIC_ST_CTRL_R = NVIC_ST_CTRL_ENABLE+NVIC_ST_CTRL_CLK_SRC;
 }
+
+// SysTick Interupt Handler
+extern uint32_t Systick_one_sec;
+
+void SysTick_Handler(void) {
+	Systick_one_sec = TRUE;	
+}
+
 // Time delay using busy wait.
 // The delay parameter is in units of the core clock. (units of 20 nsec for 50 MHz clock)
 void SysTick_Wait(uint32_t delay){
@@ -60,6 +73,7 @@ void SysTick_Wait(uint32_t delay){
   }
   while(elapsedTime <= delay);
 }
+
 // Time delay using busy wait.
 // This assumes 50 MHz system clock.
 void SysTick_Wait10ms(uint32_t delay){
