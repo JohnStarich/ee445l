@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>ADCSWTrigger</TargetName>
+      <TargetName>Alarm Clock</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -399,19 +399,9 @@
           <GroupName>Source</GroupName>
           <Files>
             <File>
-              <FileName>startup.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\startup.s</FilePath>
-            </File>
-            <File>
-              <FileName>ADCSWTrigger.c</FileName>
+              <FileName>Main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\ADCSWTrigger.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADCTestMain.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\ADCTestMain.c</FilePath>
+              <FilePath>.\Main.c</FilePath>
             </File>
             <File>
               <FileName>PLL.c</FileName>
@@ -419,14 +409,14 @@
               <FilePath>.\PLL.c</FilePath>
             </File>
             <File>
-              <FileName>Timer1.h</FileName>
+              <FileName>PLL.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Timer1.h</FilePath>
+              <FilePath>.\PLL.h</FilePath>
             </File>
             <File>
-              <FileName>Timer1.c</FileName>
+              <FileName>ST7735.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Timer1.c</FilePath>
+              <FilePath>.\ST7735.c</FilePath>
             </File>
             <File>
               <FileName>ST7735.h</FileName>
@@ -434,9 +424,19 @@
               <FilePath>.\ST7735.h</FilePath>
             </File>
             <File>
-              <FileName>ST7735.c</FileName>
+              <FileName>startup.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\startup.s</FilePath>
+            </File>
+            <File>
+              <FileName>SysTick.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\ST7735.c</FilePath>
+              <FilePath>.\SysTick.c</FilePath>
+            </File>
+            <File>
+              <FileName>SysTick.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SysTick.h</FilePath>
             </File>
           </Files>
         </Group>

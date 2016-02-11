@@ -30,6 +30,8 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
 #include "Timer1.h"
+#include "ST7735.h"
+#include <stdio.h>
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
@@ -89,6 +91,18 @@ void Timer0A_Handler(void){
   }
 }
 
+void Draw_Line(int16_t startX, int16_t startY, int16_t endX, int16_t endY) {
+	
+	for(int16_t x = startX; x < endX; x += 1) {
+		ST7735_DrawPixel(x, startY, ST7735_BLUE);
+	}
+	
+	for(int16_t y = startY; y < endY; y += 1) {
+		ST7735_DrawPixel(startX, y, ST7735_BLUE);
+	}
+	
+}
+
 int main(void){
 	DisableInterrupts();									// disable interrupts while configuring
   PLL_Init(Bus80MHz);                   // 80 MHz
@@ -103,10 +117,12 @@ int main(void){
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF2 = 0;                              // turn off LED
   Timer1_Init();												// set up Timer1 for 12.5ns interval counting
+	ST7735_InitR(INITR_REDTAB);
 	EnableInterrupts();
 	
 	while(currentIndex < 1000){
     PF1 ^= 0x02;
+		//PF1 = (PF1*12345678)/1234567+0x02;  // this line causes jitter
 	} // Toggles heartbeat while ADC is collecting data
 	
 	DisableInterrupts(); // disable data collection
@@ -137,5 +153,8 @@ int main(void){
 			largestADC = adcValues[i];
 		}
 	} // histgram array now contains the count for every possible adc value for display on the LCD
+
+	Draw_Line(10,10,50,50);
+
 }
 // End of Main
