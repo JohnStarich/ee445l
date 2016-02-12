@@ -7,3 +7,4 @@ Feel free to look around!
 # Labs
 
 [Lab 1: Fixed-point Output](Lab1/README.md)
+[Lab 2: Performance Debugging](Lab2/README.md)
