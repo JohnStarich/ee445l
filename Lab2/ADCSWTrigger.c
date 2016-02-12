@@ -79,7 +79,7 @@ void ADC0_InitSWTriggerSeq3_Ch9(void){
   ADC0_SSMUX3_R += 9;             //    set channel
   ADC0_SSCTL3_R = 0x0006;         // 12) no TS0 D0, yes IE0 END0
   ADC0_IM_R &= ~0x0008;           // 13) disable SS3 interrupts
-	ADC0_SAC_R |= 0x6;
+	//ADC0_SAC_R |= 0x6;
   ADC0_ACTSS_R |= 0x0008;         // 14) enable sample sequencer 3
 }
 

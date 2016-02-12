@@ -151,7 +151,7 @@
           <Type>0</Type>
           <LineNumber>159</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>3028</Address>
+          <Address>3100</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -167,7 +167,22 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>histogram,0x0A</ItemText>
+          <ItemText>timeJitter,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>timestamps,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>smallestTime</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>largestTime</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -232,7 +247,7 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>19</ColumnNumber>
+      <ColumnNumber>4</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>63</TopLine>
       <CurrentLine>82</CurrentLine>
@@ -296,10 +311,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>20</ColumnNumber>
+      <ColumnNumber>32</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>11</TopLine>
-      <CurrentLine>39</CurrentLine>
+      <TopLine>18</TopLine>
+      <CurrentLine>24</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Timer1.c</PathWithFileName>
       <FilenameWithoutPath>Timer1.c</FilenameWithoutPath>

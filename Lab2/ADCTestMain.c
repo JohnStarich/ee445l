@@ -121,8 +121,8 @@ int main(void){
 	EnableInterrupts();
 	
 	while(currentIndex < 1000){
-    PF1 ^= 0x02;
-		//PF1 = (PF1*12345678)/1234567+0x02;  // this line causes jitter
+    //PF1 ^= 0x02;
+		PF1 = (PF1*12345678)/1234567+0x02;  // this line causes jitter
 	} // Toggles heartbeat while ADC is collecting data
 	
 	DisableInterrupts(); // disable data collection
