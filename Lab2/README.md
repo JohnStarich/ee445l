@@ -39,7 +39,9 @@ Another solution would be to require that the ISR sets a flag when it wants the 
 ### Part D
 
 Time jitter with one sampling interrupt:  71916 (or 898.95 microseconds)
+
 Time jitter with more than one interrupt: 71942 (or 899.275 microseconds)
+
 We see a correlation here where the more interrupts we have the larger the jitter.
 
 ### Part E
