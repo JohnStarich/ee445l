@@ -13,14 +13,17 @@
 ### Part A
 
 Time to take one sample: 9.4 microseconds
+
 ![Scope with cursors](img/scope.jpg)
 
 ### Part B
 
 Time running in main: 9.84 milliseconds
+
 ![time running in the main](img/main_time.png)
 
 Time running in the ISR: 9.4 microseconds
+
 ![time running in the ISR](img/ISR_1x_sampling.png)
 
 Percent of time main is running: 0.99895 or 99.895%
@@ -42,20 +45,25 @@ We see a correlation here where the more interrupts we have the larger the jitte
 ### Part E
 
 The noise appears to have spikes all over our data range with no discernable pattern. After repeated runs we have completely different data each time.
+
 ![Noise ADC data](img/noise.png)
 
 ### Part F
 
 Normal sampling rate:
+
 ![Normal sampling rate](img/sampling_1x.png)
 
 4x sampling rate:
+
 ![4x sampling rate](img/sampling_4x.png)
 
 16x sampling rate:
+
 ![16x sampling rate](img/sampling_16x.png)
 
 64x sampling rate:
+
 ![64x sampling rate](img/sampling_64x.png)
 
 Clearly, hardware averaging sharpened our data into a much maller ADC value range and in more distinctive points. Noise is noticeably reduced with each successive increase in sampling.
