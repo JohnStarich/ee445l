@@ -71,3 +71,15 @@ Normal sampling rate:
 Clearly, hardware averaging sharpened our data into a much maller ADC value range and in more distinctive points. Noise is noticeably reduced with each successive increase in sampling.
 
 When we increased sampling rates the time to execute the ISR took considerably longer each time. The thread profile is very different because we're in the ISR for much longer periods of time.
+
+## Analysis and Discussion
+
+1. The ISR toggling PF2 three times is very minimally intrusive. Based on our measurements from the logic analyser, the ISR takes very little of the total time to run and the port toggling takes even less of that time.
+
+2. Dumps are better than printf statements because it takes significantly less time to populate an array than it does to call the printf function. At the same time though, print statements do not consume any onboard memory to store data. So the trade off is Time vs Memory.
+
+3. Critical sections result from two or more threads trying to write to the same memory location. Often interrupt routine can be the root cause if other routines are trying to write to the same locations.
+
+4. Minimally Intrusive refers to debugging techniques that do technically change the way the program executes, but the effects or which are hard noticeable.
+
+5. We don't always use the hardware averaging technique because it increases the time it takes for the ADC to produce a result.
