@@ -1,6 +1,8 @@
 #include "stdint.h"
+#include <stdio.h>
 #include "ST7735.h"
 
+extern uint32_t Hours_current,Mins_current,Secs_current;
 
 void ST7735_DrawCircle(int x0, int y0, int radius, int color)
 {

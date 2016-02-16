@@ -28,6 +28,7 @@
 #include "Buttons.h"
 #include "Graphics.h"
 #include "Timers.h"
+#include "Speaker.h"
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
@@ -55,8 +56,8 @@ uint32_t Alarm_active = false;				// flag for arming and disarming the alarm.
 
 int main(void){
 	volatile uint32_t delay;
-	DisableInterrupts();										// disable interrupts while configuring
-  PLL_Init(Bus80MHz);                   	// 80 MHz
+	DisableInterrupts();									// disable interrupts while configuring
+  PLL_Init(Bus80MHz);                   // 80 MHz
 	SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   delay = SYSCTL_RCGCGPIO_R;						// delay for port activation
 	GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
@@ -68,17 +69,11 @@ int main(void){
   PF1 = 0;                              // turn off LED
   PF2 = 0;                              // turn off LED
 	ST7735_InitR(INITR_REDTAB);
-	Timer0A_Init(80000000);									// initialize timer0A for one second interupts
+	Timer0A_Init(80000000);									// initialize timer0A for one second interupts @80MHz
 	EnableInterrupts();
 	//Buttons_Init();
 	
-	printf("Lab3");
-	ST7735_DrawCircle(CLOCK_CENTER,CLOCK_RADIUS+2,ST7735_WHITE);																					// initial draw of clock face
-	ST7735_DrawLine(CLOCK_CENTER,Hour_hand[Hours_current].x,Hour_hand[Hours_current].y,ST7735_BLUE);			// draw starting time
-	ST7735_DrawLine(CLOCK_CENTER,Min_hand[Mins_current].x,Min_hand[Mins_current].y,ST7735_BLUE);					//
-	ST7735_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);						//
-	ST7735_SetCursor(7,12);																																								// print starting time
-	printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																			//
+Alarm_clock_Graphics_Init();																																						// draw inital clock face
 			
 	while(1){
 		PF2 ^= 0x02;
@@ -101,11 +96,43 @@ int main(void){
 			printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																	// print digital time
 		}
 		if (Alarm_active) {																																									// if Alarm is on
-			if(Hours_current == Hours_old && Mins_current == Mins_old){																				// and time matches
-				//activate speaker																																							// activate speaker
+			if(Hours_current == Hours_alarm && Mins_current == Mins_alarm){																		// and time matches
+				SpeakerEnable(1);																																								// activate speaker
+				Alarm_active = false;
 			}
 		}
 	PF2 ^= 0x02;
 	}																																																			// repeat for all time
 }
 // End of Main
+
+
+/**** Initialize the Clock face ****/
+void Alarm_clock_Graphics_Init(void){
+	ST7735_FillScreen(ST7735_BLACK);
+	printf("Lab3");
+	ST7735_DrawCircle(CLOCK_CENTER,CLOCK_RADIUS+2,ST7735_WHITE);																					// initial draw of clock face
+	
+	ST7735_DrawChar(60, 1, 0x31, ST7735_WHITE, ST7735_BLACK, 1); 																					// label clock face
+	ST7735_DrawChar(65, 1, 0x32, ST7735_WHITE, ST7735_BLACK, 1); 																					//
+	ST7735_DrawChar(87, 7, 0x31, ST7735_WHITE, ST7735_BLACK, 1); 																					//
+	ST7735_DrawChar(103, 24, 0x32, ST7735_WHITE, ST7735_BLACK, 1);																				//
+	ST7735_DrawChar(109, 48, 0x33, ST7735_WHITE, ST7735_BLACK, 1);																				//
+	ST7735_DrawChar(103, 70, 0x34, ST7735_WHITE, ST7735_BLACK, 1);																				//
+	ST7735_DrawChar(86, 89, 0x35, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(62, 95, 0x36, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(39, 89, 0x37, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(21, 71, 0x38, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(14, 47, 0x39, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(16, 23, 0x31, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(21, 23, 0x30, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(34, 5, 0x31, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	ST7735_DrawChar(39, 5, 0x31, ST7735_WHITE, ST7735_BLACK, 1);																					//
+	
+	ST7735_DrawLine(CLOCK_CENTER,Hour_hand[Hours_current].x,Hour_hand[Hours_current].y,ST7735_BLUE);			// draw starting time
+	ST7735_DrawLine(CLOCK_CENTER,Min_hand[Mins_current].x,Min_hand[Mins_current].y,ST7735_BLUE);					//
+	ST7735_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);						//
+	
+	ST7735_SetCursor(7,12);																																								// print starting time
+	printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																			//
+}
