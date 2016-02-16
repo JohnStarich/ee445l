@@ -2,6 +2,8 @@
 #include "Bool.h"
 #include "../inc/tm4c123gh6pm.h"
 
+#define PF1             (*((volatile uint32_t *)0x40025008))
+	
 extern uint32_t Secs_current, Mins_current, Hours_current, Secs_old, Mins_old, Hours_old, Timer_one_sec, Timer_one_min, Timer_one_hour;
 
 void Timer0A_Init(uint32_t period){
@@ -19,14 +21,15 @@ void Timer0A_Init(uint32_t period){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// clear timer0A timeout flag
   TIMER0_CTL_R |= TIMER_CTL_TAEN;  // enable timer0A 32-b, periodic, interrupts
   // **** interrupt initialization ****
-                                   // Timer0A=priority 2
-  NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; // top 3 bits
+                                   // Timer0A=priority 1
+  NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x20000000; // top 3 bits
   NVIC_EN0_R = 1<<19;              // enable interrupt 19 in NVIC
 }
 
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
 	
+	PF1 ^= 0x02;
 	Secs_old = Secs_current;
 	Secs_current += 1;
 	Timer_one_sec = true;
@@ -46,4 +49,5 @@ void Timer0A_Handler(void){
 	if(Hours_current >= 12) {
 		Hours_current = 0;	
 	}
+	PF1 ^= 0x02;
 }
