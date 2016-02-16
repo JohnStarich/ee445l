@@ -60,7 +60,7 @@ void SysTick_Init(void){
 extern uint32_t Systick_one_sec;
 
 void SysTick_Handler(void) {
-	Systick_one_sec = TRUE;	
+	//Systick_one_sec = TRUE;	
 }
 
 // Time delay using busy wait.

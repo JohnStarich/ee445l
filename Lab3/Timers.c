@@ -1,7 +1,10 @@
 #include <stdint.h>
+#include "Bool.h"
 #include "../inc/tm4c123gh6pm.h"
 
-void Timer0A_Init100HzInt(uint32_t period){
+extern uint32_t Secs_current, Mins_current, Hours_current, Secs_old, Mins_old, Hours_old, Timer_one_sec, Timer_one_min, Timer_one_hour;
+
+void Timer0A_Init(uint32_t period){
   volatile uint32_t delay;
   // **** general initialization ****
   SYSCTL_RCGCTIMER_R |= 0x01;      // activate timer0
@@ -23,5 +26,24 @@ void Timer0A_Init100HzInt(uint32_t period){
 
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
-  //PE4 ^= 0x04;												// toggle Port E pin 4
+	
+	Secs_old = Secs_current;
+	Secs_current += 1;
+	Timer_one_sec = true;
+	
+	if(Secs_current >= 60) {
+		Secs_current = 0;
+		Mins_old = Mins_current;
+		Mins_current += 1;
+		Timer_one_min = true;
+	}
+	if(Mins_current >= 60) {
+		Mins_current = 0;
+		Hours_old = Hours_current;
+		Hours_current += 1;
+		Timer_one_hour = true;
+	}
+	if(Hours_current >= 12) {
+		Hours_current = 0;	
+	}
 }
