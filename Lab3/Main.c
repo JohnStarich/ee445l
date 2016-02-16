@@ -28,6 +28,7 @@
 #include "Buttons.h"
 #include "Graphics.h"
 #include "Timers.h"
+#include "PWM.h"
 #include "Speaker.h"
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
@@ -40,9 +41,9 @@ void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
 /***** GLOBAL VARIABLES *****/
-uint32_t Timer_one_sec = false;				// semaphore for one second intervals updated by Timer0A.
-uint32_t Timer_one_min = false;				// semaphore for one minute intervals updated by Timer0A.
-uint32_t Timer_one_hour = false;			// semaphore for one hour intervals updated by Timer0A.
+bool Timer_one_sec = false;						// semaphore for one second intervals updated by Timer0A.
+bool Timer_one_min = false;						// semaphore for one minute intervals updated by Timer0A.
+bool Timer_one_hour = false;					// semaphore for one hour intervals updated by Timer0A.
 uint32_t Hours_current = 0;						// holds the current hour
 uint32_t Mins_current = 0;						// holds the current minute
 uint32_t Secs_current = 0;						// holds the current second
@@ -51,13 +52,11 @@ uint32_t Mins_old;										// keeps track of the previous min time (used for gr
 uint32_t Secs_old;										// keeps track of the previous sec time (used for graphics)
 uint32_t Hours_alarm = 0;							// holds the alarm hour time
 uint32_t Mins_alarm = 0;							// holds the alarm min time
-uint32_t Alarm_active = false;				// flag for arming and disarming the alarm.
+bool Alarm_active = false;						// flag for arming and disarming the alarm.
 /****************************/
 
-int main(void){
+void Heartbeat_Init(void) {
 	volatile uint32_t delay;
-	DisableInterrupts();									// disable interrupts while configuring
-  PLL_Init(Bus80MHz);                   // 80 MHz
 	SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   delay = SYSCTL_RCGCGPIO_R;						// delay for port activation
 	GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
@@ -68,41 +67,48 @@ int main(void){
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF1 = 0;                              // turn off LED
   PF2 = 0;                              // turn off LED
+}
+
+int main(void){
+	DisableInterrupts();										// disable interrupts while configuring
+	PLL_Init(Bus80MHz);                   	// 80 MHz
+	Heartbeat_Init();
 	ST7735_InitR(INITR_REDTAB);
-	Timer0A_Init(80000000);									// initialize timer0A for one second interupts @80MHz
+	Timer0A_Init(80000000);									// initialize timer0A for one second interupts
+	PWM0A_Init(40000, 10000);         			// initialize PWM0, 1000 Hz, 25% duty
 	EnableInterrupts();
-	//Buttons_Init();
+	Buttons_Init();
 	
-Alarm_clock_Graphics_Init();																																						// draw inital clock face
+	Alarm_clock_Graphics_Init();																																						// draw inital clock face
 			
 	while(1){
-		PF2 ^= 0x02;
-		if(Timer_one_hour == true){																																					// if the hour rolled over,
-		ST7735_DrawLine(CLOCK_CENTER,Hour_hand[Hours_old].x,Hour_hand[Hours_old].y,ST7735_BLACK); 					// erase the old hour hand
-		Timer_one_hour = false;																																							// clear hour hand flag
+		PF2 ^= 0x04;
+		if(Timer_one_hour == true){																																						// if the hour rolled over,
+			Graphics_DrawLine(CLOCK_CENTER,Hour_hand[Hours_old].x,Hour_hand[Hours_old].y,ST7735_BLACK); 				// erase the old hour hand
+			Timer_one_hour = false;																																							// clear hour hand flag
 		}
-		if(Timer_one_min == true){																																					// if min hand rolled over,
-		ST7735_DrawLine(CLOCK_CENTER,Min_hand[Mins_old].x,Min_hand[Mins_old].y,ST7735_BLACK);								// erase the old min hand
-		Timer_one_min = false;																																							// clear flag
+		if(Timer_one_min == true){																																						// if min hand rolled over,
+			Graphics_DrawLine(CLOCK_CENTER,Min_hand[Mins_old].x,Min_hand[Mins_old].y,ST7735_BLACK);							// erase the old min hand
+			Timer_one_min = false;																																							// clear flag
 		}
-		if(Timer_one_sec == true){																																					// if the sec hand rolled over,
-																																																				// and it will ever update of Timer0A,
-			ST7735_DrawLine(CLOCK_CENTER,Min_hand[Secs_old].x,Min_hand[Secs_old].y,ST7735_BLACK);							// erase old sec hand
-			ST7735_DrawLine(CLOCK_CENTER,Hour_hand[Hours_current].x,Hour_hand[Hours_current].y,ST7735_BLUE);	// draw new hour hand
-			ST7735_DrawLine(CLOCK_CENTER,Min_hand[Mins_current].x,Min_hand[Mins_current].y,ST7735_BLUE);			// draw new min hand
-			ST7735_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);				// draw new sec hand
-			Timer_one_sec = false;																																						// clear flag
-			ST7735_SetCursor(7,12);																																						// 
-			printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																	// print digital time
+		if(Timer_one_sec == true){																																						// if the sec hand rolled over,
+																																																					// and it will ever update of Timer0A,
+			Graphics_DrawLine(CLOCK_CENTER,Min_hand[Secs_old].x,Min_hand[Secs_old].y,ST7735_BLACK);							// erase old sec hand
+			Graphics_DrawLine(CLOCK_CENTER,Hour_hand[Hours_current].x,Hour_hand[Hours_current].y,ST7735_BLUE);	// draw new hour hand
+			Graphics_DrawLine(CLOCK_CENTER,Min_hand[Mins_current].x,Min_hand[Mins_current].y,ST7735_BLUE);			// draw new min hand
+			Graphics_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);				// draw new sec hand
+			Timer_one_sec = false;																																							// clear flag
+			ST7735_SetCursor(7,12);																																							// 
+			printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																		// print digital time
 		}
-		if (Alarm_active) {																																									// if Alarm is on
-			if(Hours_current == Hours_alarm && Mins_current == Mins_alarm){																		// and time matches
-				SpeakerEnable(1);																																								// activate speaker
-				Alarm_active = false;
-			}
+		if (Alarm_active && Hours_current == Hours_alarm && Mins_current == Mins_alarm){																					// and time matches
+			SpeakerEnable(true);																																								// activate speaker
 		}
-	PF2 ^= 0x02;
-	}																																																			// repeat for all time
+		else {
+			SpeakerEnable(false);
+		}
+		PF2 ^= 0x04;
+	}																																																				// repeat for all time
 }
 // End of Main
 
@@ -111,7 +117,7 @@ Alarm_clock_Graphics_Init();																																						// draw inital
 void Alarm_clock_Graphics_Init(void){
 	ST7735_FillScreen(ST7735_BLACK);
 	printf("Lab3");
-	ST7735_DrawCircle(CLOCK_CENTER,CLOCK_RADIUS+2,ST7735_WHITE);																					// initial draw of clock face
+	Graphics_DrawCircle(CLOCK_CENTER,CLOCK_RADIUS+2,ST7735_WHITE);																					// initial draw of clock face
 	
 	ST7735_DrawChar(60, 1, 0x31, ST7735_WHITE, ST7735_BLACK, 1); 																					// label clock face
 	ST7735_DrawChar(65, 1, 0x32, ST7735_WHITE, ST7735_BLACK, 1); 																					//
@@ -129,9 +135,9 @@ void Alarm_clock_Graphics_Init(void){
 	ST7735_DrawChar(34, 5, 0x31, ST7735_WHITE, ST7735_BLACK, 1);																					//
 	ST7735_DrawChar(39, 5, 0x31, ST7735_WHITE, ST7735_BLACK, 1);																					//
 	
-	ST7735_DrawLine(CLOCK_CENTER,Hour_hand[Hours_current].x,Hour_hand[Hours_current].y,ST7735_BLUE);			// draw starting time
-	ST7735_DrawLine(CLOCK_CENTER,Min_hand[Mins_current].x,Min_hand[Mins_current].y,ST7735_BLUE);					//
-	ST7735_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);						//
+	Graphics_DrawLine(CLOCK_CENTER,Hour_hand[Hours_current].x,Hour_hand[Hours_current].y,ST7735_BLUE);			// draw starting time
+	Graphics_DrawLine(CLOCK_CENTER,Min_hand[Mins_current].x,Min_hand[Mins_current].y,ST7735_BLUE);					//
+	Graphics_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);						//
 	
 	ST7735_SetCursor(7,12);																																								// print starting time
 	printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																			//

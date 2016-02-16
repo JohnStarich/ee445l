@@ -1,10 +1,10 @@
-#include "stdint.h"
+#include <stdint.h>
 #include <stdio.h>
 #include "ST7735.h"
 
 extern uint32_t Hours_current,Mins_current,Secs_current;
 
-void ST7735_DrawCircle(int x0, int y0, int radius, int color)
+void Graphics_DrawCircle(int x0, int y0, int radius, int color)
 {
   int x = radius;
   int y = 0;
@@ -44,7 +44,7 @@ int sgn(int num){
 	else return 0;
 }
 
-void ST7735_DrawLine(int x1, int y1, int x2, int y2, int color){
+void Graphics_DrawLine(int x1, int y1, int x2, int y2, int color){
 
 	int i,dx,dy,sdx,sdy,dxabs,dyabs,x,y,px,py;
 

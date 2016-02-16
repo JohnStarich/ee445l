@@ -3,43 +3,66 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "Bool.h"
 #include "Buttons.h"
+#include "Timers.h"
 
 void Buttons_Init(void) {
-	SYSCTL_RCGCGPIO_R |= 0x04;        // 1) activate clock for Port C
-  while((SYSCTL_PRGPIO_R&0x20)==0); // allow time for clock to start
-                                    // 2) no need to unlock PC0-2
-  GPIO_PORTC_PCTL_R &= ~0x000F0F00; // 3) regular GPIO
-  GPIO_PORTC_AMSEL_R &= ~0x07;      // 4) disable analog function on PC0-2
+	SYSCTL_RCGCGPIO_R |= 0x10;        // 1) activate clock for Port E
+  while((SYSCTL_PRGPIO_R&0x10)==0); // allow time for clock to start
+                                    // 2) no need to unlock PE0-3
+  GPIO_PORTE_PCTL_R &= ~0x000F0F00; // 3) regular GPIO
+  GPIO_PORTE_AMSEL_R &= ~0x0F;      // 4) disable analog function on PE0-3
                                     // 5) no pullup for external switches
-  GPIO_PORTC_DIR_R |= 0x07;         // 5) set direction to output
-  GPIO_PORTC_AFSEL_R &= ~0x07;      // 6) regular port function
-  GPIO_PORTC_DEN_R |= 0x07;         // 7) enable digital port
+  GPIO_PORTE_DIR_R &= ~0x0F;        // 5) set direction to output
+  GPIO_PORTE_AFSEL_R &= ~0x0F;      // 6) regular port function
+  GPIO_PORTE_DEN_R |= 0x0F;         // 7) enable digital port
+	
+	Timer1_Init();
 }
 
-//    0-23 hours, 0-59 minutes, 0-59 seconds
-int32_t hours = 0, minutes = 0, seconds = 0;
+// 0-23 hours
+int32_t hours = 0;
+// 0-59 minutes
+int32_t minutes = 0;
+bool set_alarm = false;
+
+// bool debounce[4] = { hours, minutes, arm_alarm, set_alarm };
+bool debounce[4];
 
 int32_t Buttons_Hours(void) {return hours;}
 int32_t Buttons_Minutes(void) {return minutes;}
-int32_t Buttons_Seconds(void) {return seconds;}
+bool Buttons_SetAlarmMode(void) {return set_alarm;}
 
 void Buttons_ReadInput(void) {
-	bool hours, minutes, seconds;
-	hours = GPIO_PORTC_DATA_R & 0x01;
-	minutes = (GPIO_PORTC_DATA_R & 0x2) >> 1;
-	seconds = (GPIO_PORTC_DATA_R & 0x4) >> 2;
-	Buttons_AddTime(hours, minutes, seconds);
+	int32_t data = GPIO_PORTE_DATA_R;
+	if(! debounce[0])
+		debounce[0] += (data & 0x01)*2;
+	if(! debounce[1])
+		debounce[1] += ((data & 0x2) >> 1)*2;
+	if(! debounce[2])
+		debounce[2] += ((data & 0x4) >> 2)*2;
+	if(! debounce[3])
+		debounce[3] += ((data & 0x8) >> 3)*2;
 }
 
-void Buttons_AddTime(bool hoursPressed, bool minutesPressed, bool secondsPressed) {
-	if(hoursPressed) {
+void Buttons_Pressed(uint32_t button) {
+	if(button == 0)
 		hours = (hours + 1) % 24;
-	}
-	if(minutesPressed) {
+	else if(button == 1)
 		minutes = (minutes + 1) % 60;
-	}
-	if(secondsPressed) {
-		seconds = (seconds + 1) % 60;
-	}
+	else if(button == 2)
+		Alarm_active = ! Alarm_active;
+	else if(button == 3)
+		set_alarm = ! set_alarm;
 }
 
+void Buttons_10ms_Handler(void) {
+	Buttons_ReadInput();
+	for(uint32_t i = 0; i < 4; i += 1) {
+		if(debounce[i] > 0) {
+			debounce[i] -= 1;
+			if(debounce[i] == 0) {
+				Buttons_Pressed(i);
+			}
+		}
+	}
+}

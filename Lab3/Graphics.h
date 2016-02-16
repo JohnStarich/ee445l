@@ -10,8 +10,6 @@
 #define CLOCK_CENTER	64,50		
 #define CLOCK_RADIUS	40
 
-#endif
-
 struct clock_hand_pos {
 	uint32_t x;
 	uint32_t y;
@@ -83,5 +81,7 @@ struct clock_hand_pos Min_hand[60] = {
 
 
 void Alarm_clock_Graphics_Init(void);
-void ST7735_DrawCircle(int x0, int y0, int radius, int color);
-void ST7735_DrawLine(int x0, int y0, int x1, int y1, int color);
+void Graphics_DrawCircle(int x0, int y0, int radius, int color);
+void Graphics_DrawLine(int x0, int y0, int x1, int y1, int color);
+
+#endif

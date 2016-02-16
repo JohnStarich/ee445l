@@ -7,13 +7,14 @@
 #ifndef Buttons_h
 #define Buttons_h 1
 
+extern bool Alarm_active;
+
 void Buttons_Init(void);
 
 int32_t Buttons_Hours(void);
 int32_t Buttons_Minutes(void);
-int32_t Buttons_Seconds(void);
+bool Buttons_SetAlarmMode(void);
+void Buttons_10ms_Handler(void);
 
-void Buttons_AddTime(bool hours, bool minutes, bool seconds);
-void Buttons_ReadInput(void);
 
 #endif
