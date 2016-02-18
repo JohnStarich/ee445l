@@ -99,7 +99,7 @@ Port A, SSI0 (PA2, PA3, PA5, PA6, PA7) sends data to Nokia5110 LCD
 #include <string.h>
 #define SSID_NAME  "John's iPhone"        /* Access point name to connect to. */
 #define SEC_TYPE   SL_SEC_TYPE_WPA
-#define PASSKEY    "y2uvdjfi5puyd"        /* Password in case of secure AP */
+#define PASSKEY    "fuwyegfk4"        /* Password in case of secure AP */
 #define BAUD_RATE   115200
 void UART_Init(void){
   SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -215,28 +215,27 @@ int32_t strequal(const char *str1, const char *str2, uint32_t length) {
 const char temperature_buffer[MAX_TEMP_LENGTH+1];
 const char formatted_temperature_buffer[MAX_TEMP_LENGTH+1+9];
 
-char* Extract_Temperature(char received_data[MAX_RECV_BUFF_SIZE]) {
+char* Extract_Temperature(char *received_data) {
 	const char *tempMatch = "\"temp\":";
 	const int tempLength = 7;
 	int32_t index = -1;
 	// find index of temperature string
 	for(uint32_t i = 0; i < MAX_RECV_BUFF_SIZE; i += 1) {
-		if(strequal(tempMatch, &received_data[i], tempLength)) {
+		if(strequal(tempMatch, &Recvbuff[i], tempLength)) {
 			index = i + tempLength;
 			break;
 		}
 	}
 	
 	//copy temperature value part out
-	char *temperatureString = &received_data[index];
+	char *temperatureString = &Recvbuff[index];
 	uint32_t j;
-	for(j = 0; j < MAX_TEMP_LENGTH && received_data[j + index] != ','; j += 1) {
-		temperatureString[j] = received_data[j + index];
+	for(j = 0; j < MAX_TEMP_LENGTH && Recvbuff[j + index] != ','; j += 1) {
+		temperatureString[j] = Recvbuff[j + index];
 	}
 	temperatureString[j] = '\0';
 	
-	sprintf((char *)formatted_temperature_buffer, "Temp = %10s C", temperature_buffer);
-	return (char *)formatted_temperature_buffer;
+	return temperatureString;
 }
 
 /*
@@ -244,13 +243,18 @@ char* Extract_Temperature(char received_data[MAX_RECV_BUFF_SIZE]) {
  */
 // 1) change Austin Texas to your city
 // 2) you can change metric to imperial if you want temperature in F
-#define REQUEST "GET /data/2.5/weather?q=Austin%20Texas&units=metric HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n"
+#define REQUEST "GET /data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03 HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n"
 int main(void){int32_t retVal;  SlSecParams_t secParams;
   char *pConfig = NULL; INT32 ASize = 0; SlSockAddrIn_t  Addr;
   initClk();        // PLL 50 MHz
   UART_Init();      // Send data to PC, 115200 bps
   LED_Init();       // initialize LaunchPad I/O 
 	ADC0_InitSWTriggerSeq3_Ch9(); //initialize ADC sampler
+	ST7735_InitR(INITR_REDTAB);
+	
+	ST7735_SetCursor(1,1);
+	printf("Lab4C\n");
+	
   UARTprintf("Weather App\n");
   retVal = configureSimpleLinkToDefaultState(pConfig); // set policies
   if(retVal < 0)Crash(4000000);
@@ -286,14 +290,14 @@ int main(void){int32_t retVal;  SlSecParams_t secParams;
         UARTprintf("\r\n\r\n");
         UARTprintf(Recvbuff);  UARTprintf("\r\n");
 				
-				ST7735_SetCursor(1,2);
-				printf("%s\n", Extract_Temperature(Recvbuff));
+				ST7735_SetCursor(0,4);
+				printf("Temp = %6s C\n", Extract_Temperature(Recvbuff));
 				uint32_t sample = ADC0_InSeq3();
 				printf("Voltage~%lu.%lu", sample / 100, sample % 100);
       }
     }
-    while(Board_Input()==0){}; // wait for touch
     LED_GreenOff();
+    while(Board_Input()==0){}; // wait for touch
   }
 }
 
