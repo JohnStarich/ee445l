@@ -90,7 +90,7 @@
 #ifndef _ST7735H_
 #define _ST7735H_
 
-#include <stdint.h>
+//#include <stdint.h>
 
 // some flags for ST7735_InitR()
 enum initRFlags{
