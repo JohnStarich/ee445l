@@ -1,4 +1,4 @@
-# Lab 2: Performance Debugging
+# Lab 3: Alarm Clock
 
 ## Hardware Design
 
