@@ -9,3 +9,5 @@ Feel free to look around!
 [Lab 1: Fixed-point Output](Lab1/README.md)
 
 [Lab 2: Performance Debugging](Lab2/README.md)
+
+[Lab 3: Alarm Clock](Lab3/README.md)
