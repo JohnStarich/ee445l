@@ -254,9 +254,11 @@ void Wifi_Connect(char *pConfig, SlSecParams_t *secParams) {
   UARTprintf("Connected\n");
 }
 
-char* HTTP_Request(const char *hostName, const char *request, uint16_t port) {
+const char *REQ_1 = " HTTP/1.1\r\nUser-Agent: Keil\r\nHost:";
+const char *REQ_2 = "\r\nAccept: */*\r\n\r\n";
+
+char* HTTP_Request(const char *hostName, uint16_t port, const char *method, const char *request) {
 	SlSockAddrIn_t Addr; int32_t retVal; uint32_t ASize = 0;
-	LED_GreenOn();
 	strcpy(HostName, hostName);
 	retVal = sl_NetAppDnsGetHostByName(HostName, strlen(HostName),&DestinationIP, SL_AF_INET);
 	if(retVal == 0){
@@ -269,27 +271,27 @@ char* HTTP_Request(const char *hostName, const char *request, uint16_t port) {
 			retVal = sl_Connect(SockID, ( SlSockAddr_t *)&Addr, ASize);
 		}
 		if((SockID >= 0)&&(retVal >= 0)){
-			strcpy(SendBuff, request); 
+			uint32_t copyIndex = 0;
+			strcpy(&SendBuff[copyIndex], method);  copyIndex += strlen(method);
+			strcpy(&SendBuff[copyIndex], " ");     copyIndex += 1;
+			strcpy(&SendBuff[copyIndex], request); copyIndex += strlen(request);
+			strcpy(&SendBuff[copyIndex], REQ_1);   copyIndex += strlen(REQ_1);
+			strcpy(&SendBuff[copyIndex], hostName); copyIndex += strlen(hostName);
+			strcpy(&SendBuff[copyIndex], REQ_2);   copyIndex += strlen(REQ_2);
+			
 			sl_Send(SockID, SendBuff, strlen(SendBuff), 0);// Send the HTTP GET 
 			sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0);// Receive response 
 			sl_Close(SockID);
-			UARTprintf("\r\n\r\n");
-			UARTprintf(Recvbuff);  UARTprintf("\r\n");
 			
-			LED_GreenOff();
 			return Recvbuff;
 		}
 	}
-	LED_GreenOff();
 	return NULL;
 }
 
 /*
  * Application's entry point
  */
-// 1) change Austin Texas to your city
-// 2) you can change metric to imperial if you want temperature in F
-#define REQUEST "GET /data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03 HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n"
 int main(void){
 	SlSecParams_t secParams;
   char *pConfig = NULL;
@@ -304,11 +306,29 @@ int main(void){
 	Wifi_Connect(pConfig, &secParams);
   UARTprintf("Weather App\n");
   while(1){
-		char *weather_data = HTTP_Request("openweathermap.org", REQUEST, 80);
-    ST7735_SetCursor(0,4);
+		LED_GreenOn();
+		char *weather_data = HTTP_Request(
+			"api.openweathermap.org", 80,
+			"GET", "/data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03"
+		);
+		LED_GreenOff();
+		UARTprintf("\r\n\r\n");
+		UARTprintf(weather_data);  UARTprintf("\r\n");
+    
+		ST7735_SetCursor(0,4);
 		printf("Temp = %6s C\n", Extract_Temperature(weather_data));
+		
 		uint32_t sample = ADC0_InSeq3();
-		printf("Voltage~%lu.%lu", sample / 100, sample % 100);
+		LED_GreenOn();
+		char *send_data = HTTP_Request(
+			"embedded-systems-server.appspot.com", 80,
+			"GET", "/query?city=Austin%20Texas&id=John%20Starich%20and%20Jon%20Ambrose&greet=Voltage~22.5C&edxcode=8086"
+		);
+		LED_GreenOff();
+		UARTprintf("\r\n\r\n");
+		UARTprintf(send_data);  UARTprintf("\r\n");
+		//!!!!!!! TODO change query to output real temperature!!!!!!!!
+		printf("Voltage~%lu", sample);
     while(Board_Input()==0){}; // wait for touch
   }
 }
