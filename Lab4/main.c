@@ -221,21 +221,67 @@ char* Extract_Temperature(char *received_data) {
 	int32_t index = -1;
 	// find index of temperature string
 	for(uint32_t i = 0; i < MAX_RECV_BUFF_SIZE; i += 1) {
-		if(strequal(tempMatch, &Recvbuff[i], tempLength)) {
+		if(strequal(tempMatch, &received_data[i], tempLength)) {
 			index = i + tempLength;
 			break;
 		}
 	}
 	
 	//copy temperature value part out
-	char *temperatureString = &Recvbuff[index];
+	char *temperatureString = &received_data[index];
 	uint32_t j;
-	for(j = 0; j < MAX_TEMP_LENGTH && Recvbuff[j + index] != ','; j += 1) {
-		temperatureString[j] = Recvbuff[j + index];
+	for(j = 0; j < MAX_TEMP_LENGTH && received_data[j + index] != ','; j += 1) {
+		temperatureString[j] = received_data[j + index];
 	}
 	temperatureString[j] = '\0';
 	
 	return temperatureString;
+}
+
+void Wifi_Connect(char *pConfig, SlSecParams_t *secParams) {
+	int32_t retVal;
+	retVal = configureSimpleLinkToDefaultState(pConfig); // set policies
+  if(retVal < 0)Crash(4000000);
+  retVal = sl_Start(0, pConfig, 0);
+  if((retVal < 0) || (ROLE_STA != retVal) ) Crash(8000000);
+  secParams->Key = PASSKEY;
+  secParams->KeyLen = strlen(PASSKEY);
+  secParams->Type = SEC_TYPE; // OPEN, WPA, or WEP
+  sl_WlanConnect(SSID_NAME, strlen(SSID_NAME), 0, secParams, 0);
+  while((0 == (g_Status&CONNECTED)) || (0 == (g_Status&IP_AQUIRED))){
+    _SlNonOsMainLoopTask();
+  }
+  UARTprintf("Connected\n");
+}
+
+char* HTTP_Request(const char *hostName, const char *request, uint16_t port) {
+	SlSockAddrIn_t Addr; int32_t retVal; uint32_t ASize = 0;
+	LED_GreenOn();
+	strcpy(HostName, hostName);
+	retVal = sl_NetAppDnsGetHostByName(HostName, strlen(HostName),&DestinationIP, SL_AF_INET);
+	if(retVal == 0){
+		Addr.sin_family = SL_AF_INET;
+		Addr.sin_port = sl_Htons(port);
+		Addr.sin_addr.s_addr = sl_Htonl(DestinationIP);// IP to big endian 
+		ASize = sizeof(SlSockAddrIn_t);
+		SockID = sl_Socket(SL_AF_INET,SL_SOCK_STREAM, 0);
+		if( SockID >= 0 ){
+			retVal = sl_Connect(SockID, ( SlSockAddr_t *)&Addr, ASize);
+		}
+		if((SockID >= 0)&&(retVal >= 0)){
+			strcpy(SendBuff, request); 
+			sl_Send(SockID, SendBuff, strlen(SendBuff), 0);// Send the HTTP GET 
+			sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0);// Receive response 
+			sl_Close(SockID);
+			UARTprintf("\r\n\r\n");
+			UARTprintf(Recvbuff);  UARTprintf("\r\n");
+			
+			LED_GreenOff();
+			return Recvbuff;
+		}
+	}
+	LED_GreenOff();
+	return NULL;
 }
 
 /*
@@ -244,8 +290,9 @@ char* Extract_Temperature(char *received_data) {
 // 1) change Austin Texas to your city
 // 2) you can change metric to imperial if you want temperature in F
 #define REQUEST "GET /data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03 HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n"
-int main(void){int32_t retVal;  SlSecParams_t secParams;
-  char *pConfig = NULL; INT32 ASize = 0; SlSockAddrIn_t  Addr;
+int main(void){
+	SlSecParams_t secParams;
+  char *pConfig = NULL;
   initClk();        // PLL 50 MHz
   UART_Init();      // Send data to PC, 115200 bps
   LED_Init();       // initialize LaunchPad I/O 
@@ -254,49 +301,14 @@ int main(void){int32_t retVal;  SlSecParams_t secParams;
 	
 	ST7735_SetCursor(1,1);
 	printf("Lab4C\n");
-	
+	Wifi_Connect(pConfig, &secParams);
   UARTprintf("Weather App\n");
-  retVal = configureSimpleLinkToDefaultState(pConfig); // set policies
-  if(retVal < 0)Crash(4000000);
-  retVal = sl_Start(0, pConfig, 0);
-  if((retVal < 0) || (ROLE_STA != retVal) ) Crash(8000000);
-  secParams.Key = PASSKEY;
-  secParams.KeyLen = strlen(PASSKEY);
-  secParams.Type = SEC_TYPE; // OPEN, WPA, or WEP
-  sl_WlanConnect(SSID_NAME, strlen(SSID_NAME), 0, &secParams, 0);
-  while((0 == (g_Status&CONNECTED)) || (0 == (g_Status&IP_AQUIRED))){
-    _SlNonOsMainLoopTask();
-  }
-  UARTprintf("Connected\n");
   while(1){
-    strcpy(HostName,"openweathermap.org");
-    retVal = sl_NetAppDnsGetHostByName(HostName,
-             strlen(HostName),&DestinationIP, SL_AF_INET);
-    if(retVal == 0){
-      Addr.sin_family = SL_AF_INET;
-      Addr.sin_port = sl_Htons(80);
-      Addr.sin_addr.s_addr = sl_Htonl(DestinationIP);// IP to big endian 
-      ASize = sizeof(SlSockAddrIn_t);
-      SockID = sl_Socket(SL_AF_INET,SL_SOCK_STREAM, 0);
-      if( SockID >= 0 ){
-        retVal = sl_Connect(SockID, ( SlSockAddr_t *)&Addr, ASize);
-      }
-      if((SockID >= 0)&&(retVal >= 0)){
-        strcpy(SendBuff,REQUEST); 
-        sl_Send(SockID, SendBuff, strlen(SendBuff), 0);// Send the HTTP GET 
-        sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0);// Receive response 
-        sl_Close(SockID);
-        LED_GreenOn();
-        UARTprintf("\r\n\r\n");
-        UARTprintf(Recvbuff);  UARTprintf("\r\n");
-				
-				ST7735_SetCursor(0,4);
-				printf("Temp = %6s C\n", Extract_Temperature(Recvbuff));
-				uint32_t sample = ADC0_InSeq3();
-				printf("Voltage~%lu.%lu", sample / 100, sample % 100);
-      }
-    }
-    LED_GreenOff();
+		char *weather_data = HTTP_Request("openweathermap.org", REQUEST, 80);
+    ST7735_SetCursor(0,4);
+		printf("Temp = %6s C\n", Extract_Temperature(weather_data));
+		uint32_t sample = ADC0_InSeq3();
+		printf("Voltage~%lu.%lu", sample / 100, sample % 100);
     while(Board_Input()==0){}; // wait for touch
   }
 }
