@@ -99,7 +99,7 @@ Port A, SSI0 (PA2, PA3, PA5, PA6, PA7) sends data to Nokia5110 LCD
 #include <string.h>
 #define SSID_NAME  "John's iPhone"        /* Access point name to connect to. */
 #define SEC_TYPE   SL_SEC_TYPE_WPA
-#define PASSKEY    "fuwyegfk4"        /* Password in case of secure AP */
+#define PASSKEY    "9347y397fheraha"        /* Password in case of secure AP */
 #define BAUD_RATE   115200
 void UART_Init(void){
   SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -110,7 +110,7 @@ void UART_Init(void){
   UARTStdioConfig(0,BAUD_RATE,50000000);
 }
 
-#define MAX_RECV_BUFF_SIZE  1024
+#define MAX_RECV_BUFF_SIZE  2048
 #define MAX_SEND_BUFF_SIZE  512
 #define MAX_HOSTNAME_SIZE   40
 #define MAX_PASSKEY_SIZE    32
@@ -255,17 +255,28 @@ void Wifi_Connect(char *pConfig, SlSecParams_t *secParams) {
 }
 
 const char *REQ_1 = " HTTP/1.1\r\nUser-Agent: Keil\r\nHost:";
-const char *REQ_2 = "\r\nAccept: */*\r\n\r\n";
+const char *REQ_2 = "\r\n\r\n";
 
-char* HTTP_Request(const char *hostName, uint16_t port, const char *method, const char *request) {
+void cleanup(void) {
+	memset(&Recvbuff,0,MAX_RECV_BUFF_SIZE);
+  memset(&SendBuff,0,MAX_SEND_BUFF_SIZE);
+  memset(&HostName,0,MAX_HOSTNAME_SIZE);
+  DestinationIP = 0;;
+  SockID = 0;
+}
+
+char* HTTP_Request(const char *hostName, uint16_t port, const char *method, const char *request, char *requestData1, char *requestData2) {
 	SlSockAddrIn_t Addr; int32_t retVal; uint32_t ASize = 0;
+	cleanup();
 	strcpy(HostName, hostName);
+	UARTprintf("\r\n\r\nUsing host: %s\r\n", HostName);
 	retVal = sl_NetAppDnsGetHostByName(HostName, strlen(HostName),&DestinationIP, SL_AF_INET);
 	if(retVal == 0){
 		Addr.sin_family = SL_AF_INET;
 		Addr.sin_port = sl_Htons(port);
 		Addr.sin_addr.s_addr = sl_Htonl(DestinationIP);// IP to big endian 
 		ASize = sizeof(SlSockAddrIn_t);
+		SockID = -1;
 		SockID = sl_Socket(SL_AF_INET,SL_SOCK_STREAM, 0);
 		if( SockID >= 0 ){
 			retVal = sl_Connect(SockID, ( SlSockAddr_t *)&Addr, ASize);
@@ -275,10 +286,20 @@ char* HTTP_Request(const char *hostName, uint16_t port, const char *method, cons
 			strcpy(&SendBuff[copyIndex], method);  copyIndex += strlen(method);
 			strcpy(&SendBuff[copyIndex], " ");     copyIndex += 1;
 			strcpy(&SendBuff[copyIndex], request); copyIndex += strlen(request);
+			if(requestData1) {
+				strcpy(&SendBuff[copyIndex], requestData1);
+				copyIndex += strlen(requestData1);
+			}
+			if(requestData2) {
+				strcpy(&SendBuff[copyIndex], requestData2);
+				copyIndex += strlen(requestData2);
+			}
 			strcpy(&SendBuff[copyIndex], REQ_1);   copyIndex += strlen(REQ_1);
 			strcpy(&SendBuff[copyIndex], hostName); copyIndex += strlen(hostName);
 			strcpy(&SendBuff[copyIndex], REQ_2);   copyIndex += strlen(REQ_2);
+			SendBuff[copyIndex] = '\0';
 			
+			UARTprintf("Sending request: %s\r\n\r\n", SendBuff);
 			sl_Send(SockID, SendBuff, strlen(SendBuff), 0);// Send the HTTP GET 
 			sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0);// Receive response 
 			sl_Close(SockID);
@@ -287,6 +308,17 @@ char* HTTP_Request(const char *hostName, uint16_t port, const char *method, cons
 		}
 	}
 	return NULL;
+}
+
+char voltagestring_buff[20];
+char* VoltageToString(uint32_t sample) {
+	uint32_t i;
+	voltagestring_buff[19] = '\0';
+	for(i = 18; sample != 0; i--) {
+		voltagestring_buff[i] = (char)('0' + sample % 10);
+		sample /= 10;
+	}
+	return &voltagestring_buff[i+1];
 }
 
 /*
@@ -305,11 +337,13 @@ int main(void){
 	printf("Lab4C\n");
 	Wifi_Connect(pConfig, &secParams);
   UARTprintf("Weather App\n");
-  while(1){
+	while(1){
 		LED_GreenOn();
 		char *weather_data = HTTP_Request(
 			"api.openweathermap.org", 80,
-			"GET", "/data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03"
+			"GET", "/data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03",
+			NULL,
+			NULL
 		);
 		LED_GreenOff();
 		UARTprintf("\r\n\r\n");
@@ -321,14 +355,17 @@ int main(void){
 		uint32_t sample = ADC0_InSeq3();
 		LED_GreenOn();
 		char *send_data = HTTP_Request(
-			"embedded-systems-server.appspot.com", 80,
-			"GET", "/query?city=Austin%20Texas&id=John%20Starich%20and%20Jon%20Ambrose&greet=Voltage~22.5C&edxcode=8086"
+			// embsysmooc or embedded-systems-server?
+			"embsysmooc.appspot.com", 80,
+			"GET", "/query?city=Austin%20Texas&id=John%20Starich%20and%20Jon%20Ambrose&edxcode=8086&greet=Voltage~",
+			VoltageToString(sample),
+			"V"
 		);
 		LED_GreenOff();
 		UARTprintf("\r\n\r\n");
 		UARTprintf(send_data);  UARTprintf("\r\n");
-		//!!!!!!! TODO change query to output real temperature!!!!!!!!
-		printf("Voltage~%lu", sample);
+		printf("Voltage~%luV", sample);
+		
     while(Board_Input()==0){}; // wait for touch
   }
 }
