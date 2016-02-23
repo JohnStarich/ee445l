@@ -99,7 +99,7 @@ Port A, SSI0 (PA2, PA3, PA5, PA6, PA7) sends data to Nokia5110 LCD
 #include <string.h>
 #define SSID_NAME  "John's iPhone"        /* Access point name to connect to. */
 #define SEC_TYPE   SL_SEC_TYPE_WPA
-#define PASSKEY    "9347y397fheraha"        /* Password in case of secure AP */
+#define PASSKEY    "837fngro8gyna"        /* Password in case of secure AP */
 #define BAUD_RATE   115200
 void UART_Init(void){
   SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -364,7 +364,20 @@ int main(void){
 		LED_GreenOff();
 		UARTprintf("\r\n\r\n");
 		UARTprintf(send_data);  UARTprintf("\r\n");
-		printf("Voltage~%luV", sample);
+		printf("Voltage~%luV\n", sample);
+		
+		LED_GreenOn();
+		char *custom = HTTP_Request(
+			"tomcat.johnstarich.com", 80,
+			"GET", "/%22temp%22:1000,",
+			NULL,
+			NULL
+		);
+		LED_GreenOff();
+		UARTprintf("\r\n\r\n");
+		UARTprintf(send_data);  UARTprintf("\r\n");
+		UARTprintf("Custom temp: %s", custom);  UARTprintf("\r\n");
+		printf("Custom temp: %s\n", Extract_Temperature(custom));
 		
     while(Board_Input()==0){}; // wait for touch
   }
