@@ -23,13 +23,13 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
 #include "ST7735.h"
-#include <stdio.h>
 #include "Bool.h"
 #include "Buttons.h"
 #include "Graphics.h"
 #include "Timers.h"
 #include "PWM.h"
 #include "Speaker.h"
+#include <stdio.h>
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
@@ -99,14 +99,20 @@ int main(void){
 			Graphics_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);				// draw new sec hand
 			Timer_one_sec = false;																																							// clear flag
 			ST7735_SetCursor(7,12);																																							// 
-			printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																		// print digital time
+			printf("%02d:%02d:%02d",Hours_current == 0 ? 12 : Hours_current,Mins_current,Secs_current);																		// print digital time
 		}
-		if (Alarm_active && Hours_current == Hours_alarm && Mins_current == Mins_alarm){																					// and time matches
+		if (Alarm_active && Hours_current == Buttons_Hours() && Mins_current == Buttons_Minutes()){																					// and time matches
 			SpeakerEnable(true);																																								// activate speaker
 		}
 		else {
 			SpeakerEnable(false);
 		}
+		
+		if(Buttons_SetAlarmMode()) {
+			ST7735_SetCursor(7,13);
+			printf("%02d:%02d",Buttons_Hours() == 0 ? 12 : Buttons_Hours(),Buttons_Minutes());																		// print digital time
+		}
+		
 		PF2 ^= 0x04;
 	}																																																				// repeat for all time
 }
@@ -140,5 +146,5 @@ void Alarm_clock_Graphics_Init(void){
 	Graphics_DrawLine(CLOCK_CENTER,Min_hand[Secs_current].x,Min_hand[Secs_current].y,ST7735_RED);						//
 	
 	ST7735_SetCursor(7,12);																																								// print starting time
-	printf("%0d:%02d:%02d",Hours_current,Mins_current,Secs_current);																			//
+	printf("%02d:%02d:%02d",Hours_current == 0 ? 12 : Hours_current,Mins_current,Secs_current);																			//
 }

@@ -5,6 +5,12 @@
 #include "Buttons.h"
 #include "Timers.h"
 
+extern uint32_t Hours_current;						// holds the current hour
+extern uint32_t Mins_current;						// holds the current minute
+extern uint32_t Hours_old;
+extern uint32_t Mins_old;
+extern bool Timer_one_hour, Timer_one_min;
+
 void Buttons_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x10;        // 1) activate clock for Port E
   while((SYSCTL_PRGPIO_R&0x10)==0); // allow time for clock to start
@@ -32,24 +38,45 @@ int32_t Buttons_Hours(void) {return hours;}
 int32_t Buttons_Minutes(void) {return minutes;}
 bool Buttons_SetAlarmMode(void) {return set_alarm;}
 
+#define CYCLE_WAIT 5
+
 void Buttons_ReadInput(void) {
 	int32_t data = GPIO_PORTE_DATA_R;
-	if(! debounce[0])
-		debounce[0] += (data & 0x01)*2;
-	if(! debounce[1])
-		debounce[1] += ((data & 0x2) >> 1)*2;
-	if(! debounce[2])
-		debounce[2] += ((data & 0x4) >> 2)*2;
-	if(! debounce[3])
-		debounce[3] += ((data & 0x8) >> 3)*2;
+	if((data & 0x01) != 0)
+		debounce[0] = (data & 0x01)*CYCLE_WAIT;
+	if((data & 0x02) != 0)
+		debounce[1] = ((data & 0x2) >> 1)*CYCLE_WAIT;
+	if((data & 0x04) != 0)
+		debounce[2] = ((data & 0x4) >> 2)*CYCLE_WAIT;
+	if((data & 0x08) != 0)
+		debounce[3] = ((data & 0x8) >> 3)*CYCLE_WAIT;
 }
 
 void Buttons_Pressed(uint32_t button) {
-	if(button == 0)
-		hours = (hours + 1) % 24;
-	else if(button == 1)
-		minutes = (minutes + 1) % 60;
-	else if(button == 2)
+	if(! set_alarm) {
+		if(button == 0) {
+			Hours_old = Hours_current;
+			Hours_current = (Hours_current + 1) % 12;
+			Timer_one_hour = true;
+		}
+		else if(button == 1) {
+			if(Mins_current+1 >= 60) {
+				Hours_old = Hours_current;
+				Hours_current = (Hours_current + 1) % 12;
+				Timer_one_hour = true;
+			}
+			Mins_old = Mins_current;
+			Mins_current = (Mins_current + 1) % 60;
+			Timer_one_min = true;
+		}
+	}
+	else {
+		if(button == 0)
+			hours = (hours + 1) % 12;
+		else if(button == 1)
+			minutes = (minutes + 1) % 60;
+	}
+	if(button == 2)
 		Alarm_active = ! Alarm_active;
 	else if(button == 3)
 		set_alarm = ! set_alarm;
