@@ -1,11 +1,13 @@
 */
 !Lab*/
 *.docx
+*.doc
 lm4f120.s
 tm4c123gh6pm.s
 *.pdf
 
 # uVision Generated Files
+*.uvopt
 *.uvgui.*
 *.axf
 *.htm
