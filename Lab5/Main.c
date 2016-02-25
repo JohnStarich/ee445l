@@ -34,6 +34,9 @@
 #include <stdint.h>
 #include "PLL.h"
 #include "Timer0A.h"
+#include "DAC.h"
+#include "Switch.h"
+#include "Song.h"
 
 
 #define PF1       (*((volatile uint32_t *)0x40025008))
