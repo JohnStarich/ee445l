@@ -97,9 +97,11 @@ Port A, SSI0 (PA2, PA3, PA5, PA6, PA7) sends data to Nokia5110 LCD
 #include "ADCSWTrigger.h"
 #include <stdio.h>
 #include <string.h>
+#include "Timer1.h"
+
 #define SSID_NAME  "John's iPhone"        /* Access point name to connect to. */
 #define SEC_TYPE   SL_SEC_TYPE_WPA
-#define PASSKEY    "837fngro8gyna"        /* Password in case of secure AP */
+#define PASSKEY    "34g734hew9vuob"        /* Password in case of secure AP */
 #define BAUD_RATE   115200
 void UART_Init(void){
   SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -327,9 +329,11 @@ char* VoltageToString(uint32_t sample) {
 int main(void){
 	SlSecParams_t secParams;
   char *pConfig = NULL;
+	uint32_t timeElapsed;
   initClk();        // PLL 50 MHz
   UART_Init();      // Send data to PC, 115200 bps
   LED_Init();       // initialize LaunchPad I/O 
+	Timer1_Init();
 	ADC0_InitSWTriggerSeq3_Ch9(); //initialize ADC sampler
 	ST7735_InitR(INITR_REDTAB);
 	
@@ -338,22 +342,32 @@ int main(void){
 	Wifi_Connect(pConfig, &secParams);
   UARTprintf("Weather App\n");
 	while(1){
+		// clear the data output
+		ST7735_SetCursor(0,4);
+		for(uint16_t i = 0; i < 6; i += 1) {
+			printf("               \n");
+		}
+		ST7735_SetCursor(0,4);
+
 		LED_GreenOn();
+		Timer1_StartWatch();
 		char *weather_data = HTTP_Request(
 			"api.openweathermap.org", 80,
 			"GET", "/data/2.5/weather?q=Austin%20Texas&units=metric&APPID=d6e361f259c47a6ea9837d41b1856b03",
 			NULL,
 			NULL
 		);
+		timeElapsed = Timer1_StopWatch();
 		LED_GreenOff();
 		UARTprintf("\r\n\r\n");
 		UARTprintf(weather_data);  UARTprintf("\r\n");
     
-		ST7735_SetCursor(0,4);
 		printf("Temp = %6s C\n", Extract_Temperature(weather_data));
+		printf("Time = %lums\n", timeElapsed * 125 / 10 / 1000000 );
 		
 		uint32_t sample = ADC0_InSeq3();
 		LED_GreenOn();
+		Timer1_StartWatch();
 		char *send_data = HTTP_Request(
 			// embsysmooc or embedded-systems-server?
 			"embsysmooc.appspot.com", 80,
@@ -361,24 +375,29 @@ int main(void){
 			VoltageToString(sample),
 			"V"
 		);
+		timeElapsed = Timer1_StopWatch();
 		LED_GreenOff();
 		UARTprintf("\r\n\r\n");
 		UARTprintf(send_data);  UARTprintf("\r\n");
 		printf("Voltage~%luV\n", sample);
-		
+		printf("Time = %lums\n", timeElapsed * 125 / 10 / 1000000 );
+
 		LED_GreenOn();
+		Timer1_StartWatch();
 		char *custom = HTTP_Request(
 			"tomcat.johnstarich.com", 80,
 			"GET", "/%22temp%22:1000,",
 			NULL,
 			NULL
 		);
+		timeElapsed = Timer1_StopWatch();
 		LED_GreenOff();
 		UARTprintf("\r\n\r\n");
 		UARTprintf(send_data);  UARTprintf("\r\n");
 		UARTprintf("Custom temp: %s", custom);  UARTprintf("\r\n");
 		printf("Custom temp: %s\n", Extract_Temperature(custom));
-		
+		printf("Time = %lums\n", timeElapsed * 125 / 10 / 1000000 );
+
     while(Board_Input()==0){}; // wait for touch
   }
 }
