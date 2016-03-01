@@ -52,6 +52,7 @@ Note Song_CurrentNote(Song song, uint32_t beatIndex);
  */
 uint16_t Instrument_CurrentVoltage(Instrument voice, uint32_t voiceIndex);
 
+void Song_PlayInit(Song song);
 void Song_PlayHandler(void);
 
 extern Note mary_lamb[];
