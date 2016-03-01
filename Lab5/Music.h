@@ -6,6 +6,17 @@
 
 #include <stdint.h>
 
+#define A 440
+#define B 494
+#define D 294
+#define G 415
+
+#define Whole 16
+#define Half 8
+#define Quarter 4
+#define Eighth 2
+#define Sixteenth 1
+
 /** Represents the voice/shape of a note's sound. */
 typedef enum {
 	Oboe,
@@ -43,3 +54,135 @@ uint16_t Song_CurrentOutput(Song song, uint32_t beatIndex);
  * Get the current pitch for an instrument with the specified beat index.
  */
 uint16_t Instrument_CurrentPitch(Instrument voice, uint32_t beatIndex);
+
+extern Note mary_lamb[] = {
+	//1 BAGABBBAAABDD
+	//  1111112112112
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Half, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Half, Flute},
+	{B, Quarter, Flute},
+	{D, Quarter, Flute},
+	{D, Half, Flute},
+	
+	//2 BAGABBBBAABAG
+	//  1111111111114
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Whole, Flute},
+	
+	//1 BAGABBBAAABDD
+	//  1111112112112
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Half, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Half, Flute},
+	{B, Quarter, Flute},
+	{D, Quarter, Flute},
+	{D, Half, Flute},
+	
+	//3 BAGABBBBAABAGD
+	//  11111111111131
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{D, Quarter, Flute},
+
+	//1 BAGABBBAAABDD
+	//  1111112112112
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Half, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Half, Flute},
+	{B, Quarter, Flute},
+	{D, Quarter, Flute},
+	{D, Half, Flute},
+	
+	//3 BAGABBBBAABAGD
+	//  11111111111131
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{D, Quarter, Flute},
+
+	//1 BAGABBBAAABDD
+	//  1111112112112
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Half, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Half, Flute},
+	{B, Quarter, Flute},
+	{D, Quarter, Flute},
+	{D, Half, Flute},
+
+	//2 BAGABBBBAABAG
+	//  1111111111114
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{A, Quarter, Flute},
+	{B, Quarter, Flute},
+	{A, Quarter, Flute},
+	{G, Whole, Flute}
+};
