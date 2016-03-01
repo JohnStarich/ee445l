@@ -21,6 +21,36 @@
 #define D 588
 #define G 392
 
+#define C3 131
+#define D3 147
+#define E3 165
+#define F3 175
+#define G3 196
+#define A3 220
+#define B3 247
+#define C4 262
+#define D4 294
+#define E4 330
+#define F4 349
+#define G4 392
+#define A4 440
+#define B4 494
+#define C5 523
+#define D5 587
+#define E5 659
+#define F5 698
+#define G5 784
+#define A5 880
+#define B5 988
+#define C6 1047
+#define D6 1175
+#define E6 1319
+#define F6 1397
+#define G6 1568
+#define A6 1760
+#define B6 1976
+#define C7 2093
+
 #define Whole 16
 #define Half 8
 #define Quarter 4
@@ -65,5 +95,6 @@ void Song_PlayInit(Song song);
 void Song_PlayHandler(void);
 
 extern Note mary_lamb[];
+extern Note ff7_pre[];
 
 #endif

@@ -68,6 +68,7 @@ void PortF_Init(void) {
 }
 
 const Song song = {90, mary_lamb};
+const Song Prelude = {128, ff7_pre};
 bool Play_mode = false;
 void Pause(void);
 
@@ -84,7 +85,7 @@ int main(void){
   Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
   EnableInterrupts();
 	
-	Song_PlayInit(song);
+	Song_PlayInit(Prelude);
 	Pause();
 
   while(1){
