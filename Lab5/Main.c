@@ -40,6 +40,7 @@
 #include "Switch.h"
 #include "Music.h"
 #include "SysTick.h"
+#include "Buttons.h"
 
 #define PF1       (*((volatile uint32_t *)0x40025008))
 #define PF2       (*((volatile uint32_t *)0x40025010))
@@ -76,6 +77,7 @@ int main(void){
 	PortF_Init();
   LEDS = 0;													// turn all LEDs off
 	DAC_Init(0);
+	Buttons_Init();
 	SysTick_Init();
 	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
   Timer0A_Init(&Song_PlayHandler, 0);		// initialize timer0A (16 Hz)
