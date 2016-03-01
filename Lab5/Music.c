@@ -349,3 +349,85 @@ Note mary_lamb[] = {
 	
 	{0, Whole, Flute}
 };
+
+Note around_world[] = {
+//base
+//AAAAB
+//44488
+	{A3, Quarter, Bassoon},
+	{A3, Quarter, Bassoon},
+	{A3, Quarter, Bassoon},
+	{A3, Eighth, Bassoon},
+	{B3, Eighth, Bassoon},
+//CCCCD
+//44488
+	{C3, Quarter, Bassoon},
+	{C3, Quarter, Bassoon},
+	{C3, Quarter, Bassoon},
+	{C3, Eighth, Bassoon},
+	{D3, Eighth, Bassoon},
+//EEEE
+//4444
+	{E3, Quarter, Bassoon},
+	{E3, Quarter, Bassoon},
+	{E3, Quarter, Bassoon},
+	{E3, Quarter, Bassoon},
+//F# EDCBAG
+//8  888884
+	{F3, Eighth, Bassoon},
+	{E3, Eighth, Bassoon},
+	{D3, Eighth, Bassoon},
+	{C3, Eighth, Bassoon},
+	{B3, Eighth, Bassoon},
+	{A3, Eighth, Bassoon},
+	{G2, Quarter, Bassoon},
+//AAAAB
+//44488
+	{A3, Quarter, Bassoon},
+	{A3, Quarter, Bassoon},
+	{A3, Quarter, Bassoon},
+	{A3, Eighth, Bassoon},
+	{B3, Eighth, Bassoon},
+//CCCCD
+//44488
+	{C3, Quarter, Bassoon},
+	{C3, Quarter, Bassoon},
+	{C3, Quarter, Bassoon},
+	{C3, Eighth, Bassoon},
+	{D3, Eighth, Bassoon},
+//EEEE
+//4444
+	{E3, Quarter, Bassoon},
+	{E3, Quarter, Bassoon},
+	{E3, Quarter, Bassoon},
+	{E3, Quarter, Bassoon},
+//F# EDCBA
+//8  888884
+	{F3, Eighth, Bassoon},
+	{E3, Eighth, Bassoon},
+	{D3, Eighth, Bassoon},
+	{C3, Eighth, Bassoon},
+	{B3, Eighth, Bassoon},
+	{A3, Eighth, Bassoon},
+	{G2, Quarter, Bassoon},
+
+//treble
+//AAAAB
+//44488
+//CCCCD
+//44488
+//EEEE
+//4444
+//F# EDCBAG
+//8  888884
+//AAAAB
+//44488
+//CCCCD
+//44488
+//EEEE
+//4444
+//F# EDCBAG
+//8  888884
+	{0, 0, Bassoon}
+
+};

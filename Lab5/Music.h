@@ -21,6 +21,7 @@
 #define D 588
 #define G 392
 
+#define G2 98
 #define C3 131
 #define D3 147
 #define E3 156//normal:165
@@ -96,5 +97,6 @@ void Song_PlayHandler(void);
 
 extern Note mary_lamb[];
 extern Note ff7_pre[];
+extern Note around_world[];
 
 #endif
