@@ -12,6 +12,7 @@
 // if desired interrupt frequency is f, Timer0A_Init parameter is busfrequency/f
 #define F16HZ (80000000/16)
 #define F20KHZ (80000000/20000)
+#define F64HZ	(80000000/64)
 
 #define A 440
 #define B 494

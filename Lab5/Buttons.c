@@ -52,7 +52,7 @@ void Buttons_Pressed(uint32_t button) {
 		Rewind();
 	}
 	else if (button == 2) {
-	
+	TIMER0_TAILR_R = F64HZ-1;
 	}
 	else if (button == 3) {
 	

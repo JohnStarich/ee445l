@@ -35,6 +35,7 @@
 #include <stdbool.h>
 #include "PLL.h"
 #include "Timer0A.h"
+#include "Timer1A.h"
 #include "DAC.h"
 #include "Switch.h"
 #include "Music.h"
@@ -78,6 +79,7 @@ int main(void){
 	SysTick_Init();
 	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
   Timer0A_Init(&Song_PlayHandler, 0);		// initialize timer0A (16 Hz)
+	Timer1_Init();
   EnableInterrupts();
 	
 	Song_PlayInit(song);
