@@ -77,16 +77,13 @@ void Play(void) {
 	Play_mode = true;
 	NVIC_ST_CTRL_R = 0x07;
 	TIMER0_CTL_R = 0x00000001;
-	//TIMER0_TAILR_R = F16HZ-1;
-	//NVIC_ST_RELOAD_R = 800000 / Song_CurrentNote().pitch;
+	NVIC_ST_RELOAD_R = 500;
 }
 
 void Pause(void) {
 	Play_mode = false;
 	NVIC_ST_CTRL_R = 0;
 	TIMER0_CTL_R = 0x00000000;
-	//TIMER0_TAILR_R = 0;
-	//NVIC_ST_RELOAD_R = 0;	
 }
 
 extern const Song song;

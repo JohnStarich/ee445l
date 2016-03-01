@@ -67,12 +67,15 @@ extern uint32_t Systick_one_sec;
 uint32_t voiceIndex = 0;
 Note *previousNote = 0;
 void SysTick_Handler(void) {
-	if(voiceIndex > 5000)
+	if(voiceIndex > 2000)
 		DAC_Output((Instrument_CurrentVoltage(voiceIndex) - 2048) /* * Instrument_EnvelopeMultiplier(voiceIndex) / ENVELOPE_SCALE */ + 2048);
 	Note *newNote = Song_CurrentNote();
 	if(newNote != previousNote) {
 		previousNote = newNote;
-		NVIC_ST_RELOAD_R = 800000 / newNote->pitch;
+		if(newNote->pitch == 0)
+			NVIC_ST_RELOAD_R = 0;
+		else
+			NVIC_ST_RELOAD_R = 800000 / newNote->pitch;
 		voiceIndex %= 64;
 	}
 	voiceIndex += 1;
