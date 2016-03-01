@@ -77,7 +77,7 @@ int main(void){
 	DAC_Init(0);
 	SysTick_Init();
 	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
-  Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
+  Timer0A_Init(&Song_PlayHandler, 0);		// initialize timer0A (16 Hz)
   EnableInterrupts();
 	
 	Song_PlayInit(song);
