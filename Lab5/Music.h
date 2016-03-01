@@ -4,6 +4,9 @@
 // John Starich and Jon Ambrose
 // February 24, 2016
 
+#ifndef MUSIC_H
+#define MUSIC_H 1
+
 #include <stdint.h>
 
 #define A 440
@@ -38,151 +41,19 @@ typedef struct {
 	Note *notes;       //all of the notes in the song
 } Song;
 
-/** Constructor for Song */
-Song Song_Create(uint16_t tempo, Note *notes);
-
-/** Constructor for Note */
-Note Note_Create(uint16_t pitch, uint16_t duration, Instrument voice);
-
 /**
  * Get the current output voltage for the specified beat index for this song.
  * The beat index is the index of which beat (or quarter-note beat) in the song to find a voltage for.
  */
-uint16_t Song_CurrentOutput(Song song, uint32_t beatIndex);
+Note Song_CurrentNote(Song song, uint32_t beatIndex);
 
 /**
- * Get the current pitch for an instrument with the specified beat index.
+ * Get the current pitch for an instrument with the specified voice index.
  */
-uint16_t Instrument_CurrentPitch(Instrument voice, uint32_t beatIndex);
+uint16_t Instrument_CurrentVoltage(Instrument voice, uint32_t voiceIndex);
 
-extern Note mary_lamb[] = {
-	//1 BAGABBBAAABDD
-	//  1111112112112
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Half, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Half, Flute},
-	{B, Quarter, Flute},
-	{D, Quarter, Flute},
-	{D, Half, Flute},
-	
-	//2 BAGABBBBAABAG
-	//  1111111111114
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Whole, Flute},
-	
-	//1 BAGABBBAAABDD
-	//  1111112112112
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Half, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Half, Flute},
-	{B, Quarter, Flute},
-	{D, Quarter, Flute},
-	{D, Half, Flute},
-	
-	//3 BAGABBBBAABAGD
-	//  11111111111131
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{D, Quarter, Flute},
+void Song_PlayHandler(void);
 
-	//1 BAGABBBAAABDD
-	//  1111112112112
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Half, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Half, Flute},
-	{B, Quarter, Flute},
-	{D, Quarter, Flute},
-	{D, Half, Flute},
-	
-	//3 BAGABBBBAABAGD
-	//  11111111111131
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{D, Quarter, Flute},
+extern Note mary_lamb[];
 
-	//1 BAGABBBAAABDD
-	//  1111112112112
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Half, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Half, Flute},
-	{B, Quarter, Flute},
-	{D, Quarter, Flute},
-	{D, Half, Flute},
-
-	//2 BAGABBBBAABAG
-	//  1111111111114
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{A, Quarter, Flute},
-	{B, Quarter, Flute},
-	{A, Quarter, Flute},
-	{G, Whole, Flute}
-};
+#endif

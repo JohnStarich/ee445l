@@ -37,7 +37,7 @@
 #include "DAC.h"
 #include "Switch.h"
 #include "Music.h"
-
+#include "SysTick.h"
 
 #define PF1       (*((volatile uint32_t *)0x40025008))
 #define PF2       (*((volatile uint32_t *)0x40025010))
@@ -46,10 +46,6 @@
 #define RED       0x02
 #define BLUE      0x04
 #define GREEN     0x08
-#define WHEELSIZE 8           // must be an integer multiple of 2
-                              //    red, yellow,    green, light blue, blue, purple,   white,          dark
-const long COLORWHEEL[WHEELSIZE] = {RED, RED+GREEN, GREEN, GREEN+BLUE, BLUE, BLUE+RED, RED+GREEN+BLUE, 0};
-
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -57,11 +53,6 @@ long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
-void UserTask(void){
-	static int i = 0;
-	LEDS = COLORWHEEL[i&(WHEELSIZE-1)];
-	i = i + 1;
-}
 // if desired interrupt frequency is f, Timer0A_Init parameter is busfrequency/f
 #define F16HZ (50000000/16)
 #define F20KHZ (50000000/20000)
@@ -83,9 +74,13 @@ const Song song = {90, mary_lamb};
 int main(void){ 
   PLL_Init(Bus80MHz);								// bus clock at 50 MHz
   LEDS = 0;													// turn all LEDs off
-	//Timer0A_Init(&UserTask, F20KHZ);	// initialize timer0A (20,000 Hz)
-  Timer0A_Init(&UserTask, F16HZ);		// initialize timer0A (16 Hz)
+	DAC_Init(0);
+	SysTick_Init();
+	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
+  Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
   EnableInterrupts();
+	
+	Song_PlayInit(song);
 
   while(1){
     WaitForInterrupt();
