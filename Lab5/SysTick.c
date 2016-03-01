@@ -53,7 +53,7 @@
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void){
   NVIC_ST_CTRL_R = 0;                   // disable SysTick during setup
-  NVIC_ST_RELOAD_R = 0;  // maximum reload value
+  NVIC_ST_RELOAD_R = 500;  // maximum reload value
   NVIC_ST_CURRENT_R = 0;                // any write to current clears it
                                         // enable SysTick with core clock
 	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R & 0x00FFFFFF) | 0x40000000;
@@ -65,19 +65,15 @@ void SysTick_Init(void){
 extern uint32_t Systick_one_sec;
 
 uint32_t voiceIndex = 0;
-uint32_t currentAmplitude = 0;
 uint16_t previousPitch = 0;
 void SysTick_Handler(void) {
-	DAC_Output((Instrument_CurrentVoltage(voiceIndex) - 4096/2) /* * currentAmplitude / 50000 */ + 4096/2);
+	DAC_Output((Instrument_CurrentVoltage(voiceIndex) - 2048) /* * Instrument_EnvelopeMultiplier(voiceIndex) / ENVELOPE_SCALE */ + 2048);
 	uint32_t newPitch = Song_CurrentNote().pitch;
 	if(newPitch != previousPitch) {
 		previousPitch = newPitch;
-		currentAmplitude = 50000;
 		NVIC_ST_RELOAD_R = 800000 / newPitch;
-		voiceIndex = 0;
+		voiceIndex %= 64;
 	}
-	if(currentAmplitude > 0)
-		currentAmplitude -= 1;
 	voiceIndex += 1;
 }
 

@@ -16,6 +16,13 @@ uint16_t Instrument_CurrentVoltage(uint32_t voiceIndex) {
 	return Wave[voiceIndex % 64];
 }
 
+uint16_t Instrument_EnvelopeMultiplier(uint32_t timeIndex) {
+	int64_t x = timeIndex * ENVELOPE_SCALE;
+	x = 1 - x / 100 + x * x / 20000 - x / 6000 * x / 1000 * x;
+	//return x > 0 ? x : 0;
+	return ENVELOPE_SCALE;
+}
+
 uint32_t noteIndex = 0;
 uint32_t beatIndex = 0;
 Song currentSong;
@@ -37,7 +44,7 @@ Note Song_CurrentNote() {
 void Song_PlayHandler(void){
 	Note currentNote = Song_CurrentNote();
 	beatIndex += 1;
-	if(beatIndex >= currentNote.duration * 4) {
+	if(beatIndex >= currentNote.duration * 2) {
 		noteIndex += 1;
 		beatIndex = 0;
 	}

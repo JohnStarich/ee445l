@@ -20,7 +20,7 @@ void Buttons_Init(void) {
 	Timer1_Init();
 }
 // bool debounce[4] = { hours, minutes, arm_alarm, set_alarm };
-bool debounce[4];
+uint16_t debounce[4];
 
 #define CYCLE_WAIT 5
 
@@ -44,18 +44,21 @@ void Rewind(void);
 
 void Buttons_Pressed(uint32_t button) {
 	if(button == 0) {											// play/pause button
-		
-		if(Play_mode) { Pause();}
-		else { Play(); }
+		if(Play_mode) {
+			Pause();
+		}
+		else {
+			Play();
+		}
 	}
 	else if(button == 1) {								// rewind button
 		Rewind();
 	}
 	else if (button == 2) {
-	TIMER0_TAILR_R = F64HZ-1;
+		TIMER0_TAILR_R = F64HZ-1;
 	}
 	else if (button == 3) {
-	
+		TIMER0_TAILR_R = F16HZ-1;
 	}
 }
 void Buttons_10ms_Handler(void) {
@@ -72,14 +75,18 @@ void Buttons_10ms_Handler(void) {
 
 void Play(void) {
 	Play_mode = true;
-	TIMER0_TAILR_R = F16HZ-1;
-	NVIC_ST_RELOAD_R = 800000 / Song_CurrentNote().pitch;
+	NVIC_ST_CTRL_R = 0x07;
+	TIMER0_CTL_R = 0x00000001;
+	//TIMER0_TAILR_R = F16HZ-1;
+	//NVIC_ST_RELOAD_R = 800000 / Song_CurrentNote().pitch;
 }
 
 void Pause(void) {
 	Play_mode = false;
-	TIMER0_TAILR_R = 0;
-	NVIC_ST_RELOAD_R = 0;	
+	NVIC_ST_CTRL_R = 0;
+	TIMER0_CTL_R = 0x00000000;
+	//TIMER0_TAILR_R = 0;
+	//NVIC_ST_RELOAD_R = 0;	
 }
 
 extern const Song song;

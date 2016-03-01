@@ -13,6 +13,7 @@
 #define F16HZ (80000000/16)
 #define F20KHZ (80000000/20000)
 #define F64HZ	(80000000/64)
+#define ENVELOPE_SCALE 100000
 
 #define A 440
 #define B 494
@@ -57,6 +58,8 @@ Note Song_CurrentNote(void);
  * Get the current pitch for an instrument with the specified voice index.
  */
 uint16_t Instrument_CurrentVoltage(uint32_t voiceIndex);
+
+uint16_t Instrument_EnvelopeMultiplier(uint32_t timeIndex);
 
 void Song_PlayInit(Song song);
 void Song_PlayHandler(void);
