@@ -11,8 +11,9 @@
 
 #define A 440
 #define B 494
-#define D 294
-#define G 415
+//#define D 294
+#define D 588
+#define G 392
 
 #define Whole 16
 #define Half 8

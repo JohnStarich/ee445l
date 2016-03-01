@@ -37,7 +37,7 @@ Note Song_CurrentNote() {
 void Song_PlayHandler(void){
 	Note currentNote = Song_CurrentNote();
 	beatIndex += 1;
-	if(beatIndex >= currentNote.duration) {
+	if(beatIndex >= currentNote.duration * 4) {
 		noteIndex += 1;
 		beatIndex = 0;
 	}
@@ -172,5 +172,7 @@ Note mary_lamb[] = {
 	{A, Quarter, Flute},
 	{B, Quarter, Flute},
 	{A, Quarter, Flute},
-	{G, Whole, Flute}
+	{G, Whole, Flute},
+	
+	{0, Whole, Flute}
 };

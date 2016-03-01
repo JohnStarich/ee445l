@@ -72,7 +72,9 @@ const Song song = {90, mary_lamb};
 
 //debug code
 int main(void){ 
+	DisableInterrupts();
   PLL_Init(Bus80MHz);								// bus clock at 50 MHz
+	PortF_Init();
   LEDS = 0;													// turn all LEDs off
 	DAC_Init(0);
 	SysTick_Init();
@@ -83,6 +85,7 @@ int main(void){
 	Song_PlayInit(song);
 
   while(1){
-    WaitForInterrupt();
+		LEDS ^= RED;
+		for(int i = 0; i < 1000000; i += 1);
   }
 }
