@@ -45,12 +45,12 @@ typedef struct {
  * Get the current output voltage for the specified beat index for this song.
  * The beat index is the index of which beat (or quarter-note beat) in the song to find a voltage for.
  */
-Note Song_CurrentNote(Song song, uint32_t beatIndex);
+Note Song_CurrentNote(void);
 
 /**
  * Get the current pitch for an instrument with the specified voice index.
  */
-uint16_t Instrument_CurrentVoltage(Instrument voice, uint32_t voiceIndex);
+uint16_t Instrument_CurrentVoltage(uint32_t voiceIndex);
 
 void Song_PlayInit(Song song);
 void Song_PlayHandler(void);

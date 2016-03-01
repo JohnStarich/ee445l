@@ -2,14 +2,6 @@
 #include "DAC.h"
 #include "Music.h"
 
-/**
- * Get the current output voltage for the specified beat index for this song.
- * The beat index is the index of which note in the song to find a pitch for.
- */
-Note Song_CurrentNote(Song song, uint32_t noteIndex) {
-	return song.notes[noteIndex];
-}
-
 const unsigned short Wave[64] = {
 	2048,2224,2399,2571,2737,2897,3048,3190,3321,3439,3545,3635,3711,3770,3813,3839,3848,3839,3813,3770,
 	3711,3635,3545,3439,3321,3190,3048,2897,2737,2571,2399,2224,2048,1872,1697,1525,1359,1199,1048,906,775,
@@ -19,7 +11,8 @@ const unsigned short Wave[64] = {
 /**
  * Get the current pitch for an instrument with the specified voice index.
  */
-uint16_t Instrument_CurrentVoltage(Instrument voice, uint32_t voiceIndex) {
+uint16_t Instrument_CurrentVoltage(uint32_t voiceIndex) {
+	//Instrument currentVoice = currentNote.voice;
 	return Wave[voiceIndex % 64];
 }
 
@@ -33,8 +26,16 @@ void Song_PlayInit(Song song) {
 	beatIndex = 0;
 }
 
+/**
+ * Get the current output voltage for the specified beat index for this song.
+ * The beat index is the index of which note in the song to find a pitch for.
+ */
+Note Song_CurrentNote() {
+	return currentSong.notes[noteIndex];
+}
+
 void Song_PlayHandler(void){
-	Note currentNote = Song_CurrentNote(currentSong, noteIndex);
+	Note currentNote = Song_CurrentNote();
 	beatIndex += 1;
 	if(beatIndex >= currentNote.duration) {
 		noteIndex += 1;
