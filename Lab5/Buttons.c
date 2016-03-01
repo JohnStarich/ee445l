@@ -90,8 +90,9 @@ void Pause(void) {
 }
 
 extern const Song song;
+extern const Song Prelude;
 
 void Rewind(void) {
 	Pause();
-	Song_PlayInit(song);
+	Song_PlayInit(Prelude);
 }
