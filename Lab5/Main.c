@@ -69,6 +69,7 @@ void PortF_Init(void) {
 
 const Song song = {90, mary_lamb};
 bool Play_mode = false;
+void Pause(void);
 
 //debug code
 int main(void){ 

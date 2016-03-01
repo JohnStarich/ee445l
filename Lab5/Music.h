@@ -52,7 +52,7 @@ typedef struct {
  * Get the current output voltage for the specified beat index for this song.
  * The beat index is the index of which beat (or quarter-note beat) in the song to find a voltage for.
  */
-Note Song_CurrentNote(void);
+Note* Song_CurrentNote(void);
 
 /**
  * Get the current pitch for an instrument with the specified voice index.

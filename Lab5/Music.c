@@ -37,12 +37,12 @@ void Song_PlayInit(Song song) {
  * Get the current output voltage for the specified beat index for this song.
  * The beat index is the index of which note in the song to find a pitch for.
  */
-Note Song_CurrentNote() {
-	return currentSong.notes[noteIndex];
+Note* Song_CurrentNote() {
+	return &currentSong.notes[noteIndex];
 }
 
 void Song_PlayHandler(void){
-	Note currentNote = Song_CurrentNote();
+	Note currentNote = *Song_CurrentNote();
 	beatIndex += 1;
 	if(beatIndex >= currentNote.duration * 2) {
 		noteIndex += 1;

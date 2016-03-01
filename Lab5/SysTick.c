@@ -65,13 +65,14 @@ void SysTick_Init(void){
 extern uint32_t Systick_one_sec;
 
 uint32_t voiceIndex = 0;
-uint16_t previousPitch = 0;
+Note *previousNote = 0;
 void SysTick_Handler(void) {
-	DAC_Output((Instrument_CurrentVoltage(voiceIndex) - 2048) /* * Instrument_EnvelopeMultiplier(voiceIndex) / ENVELOPE_SCALE */ + 2048);
-	uint32_t newPitch = Song_CurrentNote().pitch;
-	if(newPitch != previousPitch) {
-		previousPitch = newPitch;
-		NVIC_ST_RELOAD_R = 800000 / newPitch;
+	if(voiceIndex > 5000)
+		DAC_Output((Instrument_CurrentVoltage(voiceIndex) - 2048) /* * Instrument_EnvelopeMultiplier(voiceIndex) / ENVELOPE_SCALE */ + 2048);
+	Note *newNote = Song_CurrentNote();
+	if(newNote != previousNote) {
+		previousNote = newNote;
+		NVIC_ST_RELOAD_R = 800000 / newNote->pitch;
 		voiceIndex %= 64;
 	}
 	voiceIndex += 1;
