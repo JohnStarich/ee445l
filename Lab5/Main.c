@@ -32,6 +32,7 @@
 
 #include "..//inc//tm4c123gh6pm.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include "PLL.h"
 #include "Timer0A.h"
 #include "DAC.h"
@@ -53,10 +54,6 @@ long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
-// if desired interrupt frequency is f, Timer0A_Init parameter is busfrequency/f
-#define F16HZ (50000000/16)
-#define F20KHZ (50000000/20000)
-
 void PortF_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x20;				// activate port F
 	while((SYSCTL_PRGPIO_R&0x0020) == 0){};// ready?
@@ -69,6 +66,7 @@ void PortF_Init(void) {
 }
 
 const Song song = {90, mary_lamb};
+bool Play_mode = false;
 
 //debug code
 int main(void){ 
