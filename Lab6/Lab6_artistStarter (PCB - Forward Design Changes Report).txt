@@ -1,0 +1,23 @@
+Forward Design Changes Report
+-----------------------------
+
+Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6_artistStarter (PCB - Forward Design Changes Report).txt
+Report Written:     Monday, March 07, 2016
+Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6_artistStarter.pcb
+Design Title:       
+Created:            1/28/2013 11:01:41 PM
+Last Saved:         3/7/2016 5:50:41 PM
+Editing Time:       706 min
+Units:              mil (precision 0)
+
+Disconnected pin "SW1-4" from net "+3.3".
+Disconnected pin "SW2-4" from net "+3.3".
+Disconnected pin "SW3-4" from net "+3.3".
+Disconnected pin "SW4-4" from net "+3.3".
+
+Connected pin "R2-2" to net "+3.3".
+Connected pin "J4-1" to net "+3.3".
+Connected pin "D1-2" to net "+3.3".
+
+
+End Of Report.
