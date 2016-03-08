@@ -1,0 +1,30 @@
+Design Consistency Status Report
+--------------------------------
+
+Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6_artistStarter (PCB - Design Consistency Status Report).txt
+Report Written:     Monday, March 07, 2016
+Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6_artistStarter.pcb
+Design Title:       
+Created:            1/28/2013 11:01:41 PM
+Last Saved:         3/7/2016 5:50:41 PM
+Editing Time:       706 min
+Units:              mil (precision 0)
+
+
+Checking integrity of Schematic "C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6_artistStarter.sch" with PCB "C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6_artistStarter.pcb"
+==========================================================================================================================================================================================================
+
+The PCB and Schematic designs do not match.
+To bring them into line, you will need to make the following changes to the PCB design:
+
+Disconnect Pin SW1-4 from Net "+3.3"
+Disconnect Pin SW2-4 from Net "+3.3"
+Disconnect Pin SW3-4 from Net "+3.3"
+Disconnect Pin SW4-4 from Net "+3.3"
+
+Connect Pin R2-2 to Net "+3.3"
+Connect Pin J4-1 to Net "+3.3"
+Connect Pin D1-2 to Net "+3.3"
+
+
+End Of Report.

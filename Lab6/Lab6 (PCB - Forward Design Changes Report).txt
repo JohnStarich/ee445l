@@ -1,0 +1,180 @@
+Forward Design Changes Report
+-----------------------------
+
+Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6 (PCB - Forward Design Changes Report).txt
+Report Written:     Monday, March 07, 2016
+Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb
+Design Title:       
+Created:            1/28/2013 11:01:41 PM
+Last Saved:         3/8/2015 9:14:22 AM
+Editing Time:       615 min
+Units:              mil (precision 0)
+
+Added net "PE2".
+Added net "PE3".
+Added net "PE4".
+Added net "T1_Base".
+Added net "T1_Collector".
+
+Added component reference "R3" of component "0.25Wresistor", package "DIP".
+Added value "Manufacturer=" to component reference "R3".
+
+Added value "Manufacturer Part Number=" to component reference "R3".
+
+Added value "Distributor=" to component reference "R3".
+
+Added value "Distributor Part Number=" to component reference "R3".
+
+Added component reference "SW1" of component "B3F-1050", package "DIP".
+Added value "Manufacturer=NO switch" to component reference "SW1".
+
+Added value "Manufacturer Part Number=" to component reference "SW1".
+
+Added value "Distributor=" to component reference "SW1".
+
+Added value "Distributor Part Number=" to component reference "SW1".
+
+Added component reference "R5" of component "0.25Wresistor", package "DIP".
+Added value "Manufacturer=" to component reference "R5".
+
+Added value "Manufacturer Part Number=" to component reference "R5".
+
+Added value "Distributor=" to component reference "R5".
+
+Added value "Distributor Part Number=" to component reference "R5".
+
+Added component reference "R6" of component "0.25Wresistor", package "DIP".
+Added value "Manufacturer=" to component reference "R6".
+
+Added value "Manufacturer Part Number=" to component reference "R6".
+
+Added value "Distributor=" to component reference "R6".
+
+Added value "Distributor Part Number=" to component reference "R6".
+
+Added component reference "SW2" of component "B3F-1050", package "DIP".
+Added value "Manufacturer=NO switch" to component reference "SW2".
+
+Added value "Manufacturer Part Number=" to component reference "SW2".
+
+Added value "Distributor=" to component reference "SW2".
+
+Added value "Distributor Part Number=" to component reference "SW2".
+
+Added component reference "SW3" of component "B3F-1050", package "DIP".
+Added value "Manufacturer=NO switch" to component reference "SW3".
+
+Added value "Manufacturer Part Number=" to component reference "SW3".
+
+Added value "Distributor=" to component reference "SW3".
+
+Added value "Distributor Part Number=" to component reference "SW3".
+
+Added component reference "R9" of component "0.25Wresistor", package "DIP".
+Added value "Manufacturer=" to component reference "R9".
+
+Added value "Manufacturer Part Number=" to component reference "R9".
+
+Added value "Distributor=" to component reference "R9".
+
+Added value "Distributor Part Number=" to component reference "R9".
+
+Added component reference "SW4" of component "B3F-1050", package "DIP".
+Added value "Manufacturer=NO switch" to component reference "SW4".
+
+Added value "Manufacturer Part Number=" to component reference "SW4".
+
+Added value "Distributor=" to component reference "SW4".
+
+Added value "Distributor Part Number=" to component reference "SW4".
+
+Added component reference "Q1" of component "2N2222", package "TO92".
+Added component reference "J4" of component "Speaker", package "DIP".
+Added value "Manufacturer=" to component reference "J4".
+
+Added value "Manufacturer Part Number=" to component reference "J4".
+
+Added value "Distributor=" to component reference "J4".
+
+Added value "Distributor Part Number=" to component reference "J4".
+
+Added component reference "D1" of component "1N914", package "MISC".
+Added value "Manufacturer=" to component reference "D1".
+
+Added value "Manufacturer Part Number=" to component reference "D1".
+
+Added value "Distributor=" to component reference "D1".
+
+Added value "Distributor Part Number=" to component reference "D1".
+
+Added component reference "J5" of component "ST7735", package "LCD".
+Added component reference "U3" of component "LM2937ET-3.3", package "TO220".
+Added component reference "C15" of component "Ceramic", package "C".
+Changed value "V" on component reference "C15" to "4.7uF".
+Added component reference "C16" of component "Ceramic", package "C".
+Changed value "V" on component reference "C16" to "4.7uF".
+Added component reference "PE4" of component "testpoint", package "SIP".
+Added component reference "R4" of component "0.25Wresistor", package "DIP".
+Added value "Manufacturer=" to component reference "R4".
+
+Added value "Manufacturer Part Number=" to component reference "R4".
+
+Added value "Distributor=" to component reference "R4".
+
+Added value "Distributor Part Number=" to component reference "R4".
+
+
+Connected pin "U1-24" to net "PA7".
+Connected pin "U1-23" to net "PA6".
+Connected pin "U1-22" to net "PA5".
+Connected pin "U1-20" to net "PA3".
+Connected pin "U1-19" to net "PA2".
+Connected pin "U1-59" to net "PE4".
+Connected pin "U1-6" to net "PE3".
+Connected pin "U1-7" to net "PE2".
+Connected pin "U1-8" to net "PE1".
+Connected pin "U1-9" to net "PE0".
+Connected pin "R3-1" to net "GND".
+Connected pin "R3-2" to net "PE0".
+Connected pin "SW1-1" to net "PE0".
+Connected pin "SW1-3" to net "+3.3".
+Connected pin "R5-1" to net "GND".
+Connected pin "R5-2" to net "PE2".
+Connected pin "R6-1" to net "PE4".
+Connected pin "R6-2" to net "T1_Base".
+Connected pin "SW2-1" to net "PE1".
+Connected pin "SW2-3" to net "+3.3".
+Connected pin "SW3-1" to net "PE2".
+Connected pin "SW3-3" to net "+3.3".
+Connected pin "R9-1" to net "GND".
+Connected pin "R9-2" to net "PE3".
+Connected pin "SW4-1" to net "PE3".
+Connected pin "SW4-3" to net "+3.3".
+Connected pin "Q1-2" to net "T1_Base".
+Connected pin "Q1-3" to net "T1_Collector".
+Connected pin "Q1-1" to net "GND".
+Connected pin "J4-1" to net "+3.3".
+Connected pin "J4-2" to net "T1_Collector".
+Connected pin "D1-2" to net "+3.3".
+Connected pin "D1-1" to net "T1_Collector".
+Connected pin "J5-1" to net "GND".
+Connected pin "J5-2" to net "+3.3".
+Connected pin "J5-3" to net "PA7".
+Connected pin "J5-4" to net "PA6".
+Connected pin "J5-6" to net "PA3".
+Connected pin "J5-7" to net "PA5".
+Connected pin "J5-8" to net "PA2".
+Connected pin "J5-10" to net "+3.3".
+Connected pin "U3-1" to net "+7.4".
+Connected pin "U3-2" to net "GND".
+Connected pin "U3-3" to net "+3.3".
+Connected pin "C15-1" to net "+7.4".
+Connected pin "C15-2" to net "GND".
+Connected pin "C16-1" to net "+3.3".
+Connected pin "C16-2" to net "GND".
+Connected pin "PE4-1" to net "PE4".
+Connected pin "R4-1" to net "GND".
+Connected pin "R4-2" to net "PE1".
+
+
+End Of Report.
