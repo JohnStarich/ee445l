@@ -1,0 +1,19 @@
+Back Annotation Results Report
+------------------------------
+
+Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6 (PCB - Back Annotation Results Report).txt
+Report Written:     Tuesday, March 08, 2016
+Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb
+Design Title:       
+Created:            1/28/2013 11:01:41 PM
+Last Saved:         3/8/2016 1:32:38 AM
+Editing Time:       790 min
+Units:              mil (precision 0)
+
+Back Annotate renames from PCB "C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb" to Schematic "C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.sch".
+
+Renamed Net from "PA4" to "PA2".
+Renamed Schematic Net from "PA2" to "PA4", avoiding rename conflict.
+
+
+End Of Report.
