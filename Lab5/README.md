@@ -64,31 +64,31 @@ DAC Output Voltage for 500: 0.60V
 
 DAC Output Voltage for 250: 0.36V
 
-After measuring the time domain and frequency domain of our system at 425Hz, we captured the following output:
+After measuring the time domain and frequency domain of our system at 440Hz, we captured the following output:
 
 ![Speaker time domain](time_domain.png)
 
-Time domain at 425Hz
+Time domain at 440Hz
 
 ![Speaker frequency domain](frequency_domain.png)
 
-Frequency domain at 425Hz
+Frequency domain at 440Hz
 
 ![Speaker noise](noise.png)
 
 Speaker noise
 
-Given the above output, we calculate our SNR to be 26.4dB according to this formula: `SNR = signal - noise = (-25.6dB) - (-52.0dB) = 26.4dB`
+Given the above output, we calculate our SNR to be 31.2dB according to this formula: `SNR = signal - noise = (-1.6dB) - (-32.8dB) = 31.2dB`
 
 The maximum time required to execute our periodic interrupt service routine is 1 microsecond and the time between our ISR calls is about 40 microseconds. Therefore the ratio of time spent in the ISR versus the main program is `1/40 = 0.025 = 2.5%`.
 
 ![ISR max execution time](isr_max_time.png)
 
-ISR max execution time = 1 microsecond
+ISR max execution time = 2.09 microseconds
 
 ![ISR to ISR execution time](isr_to_isr_delta.png)
 
-ISR to ISR time delta = 40 microseconds
+ISR to ISR time delta = 35.7 microseconds
 
 We measured our current usage for our board set up to run at about 75mA without the music playing and about 96mA with it playing.
 
