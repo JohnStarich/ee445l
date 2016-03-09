@@ -18,35 +18,51 @@ We followed the design spec from the lab manual's figure 5.8 and 5.9, copied bel
 
 ## Measurement Data
 
-Our reference voltage is set to 2.08V.
+Our reference voltage is set to 1.25V.
 
-The resolution we calculated is 1.0286 mV per increment value of our DAC. We found this using the equation: `(92mV - 56mV) / (35 - 0) = 1.0286mV`
+The resolution we calculated is 0.457 mV per increment value of our DAC. We found this using the equation: `(31mV - (-17mV)) / (105 - 0) = 0.457mV`
 
-Our maximum DAC value is 4044, by the following equation: `(2 * 2.08) V / 1.0286 mV/DAC = 4044 DAC`
+Our maximum DAC value is 5470, by the following equation: `(2 * 1.25) V / 0.457 mV/DAC = 5470 DAC`
 
-The precision of our DAC is 4096. For a theoretical voltage for a DAC value of 105, we got 102.5mV using the equation: `(105 * 2 * 2) / 4096 = 102.5mV`
+The precision of our DAC is 4096. For a theoretical voltage for a DAC value of 1500, we got 1.465V using the equation: `(1500 * 2 * 2) / 4096 = 1.465V`
 
-The actual voltage for a DAC output of 105 is 108.003mV via the equation: `1.0286 * 105 = 108.003mV`
+The actual voltage for a DAC output of 1500 is 1.83V.
 
-Going by this calculation, our accuracy is 94.6%, via the equation: `1 - (108.003 - 102.5) / 102.5 = 0.9463 = 94.63%`
+Going by this calculation, our accuracy is 75.09%, via the equation: `1 - (1.83V - 1.465V) / 1.465V = 0.7509 = 75.09%`
 
 Here are 8 DAC output measurements:
 
 ![DAC Output Measurement 1](dac1.png)
 
+DAC Output Voltage for 2000: 2.44V
+
 ![DAC Output Measurement 2](dac2.png)
+
+DAC Output Voltage for 1750: 2.12V
 
 ![DAC Output Measurement 3](dac3.png)
 
+DAC Output Voltage for 1500: 1.80V
+
 ![DAC Output Measurement 4](dac4.png)
+
+DAC Output Voltage for 1250: 1.56V
 
 ![DAC Output Measurement 5](dac5.png)
 
+DAC Output Voltage for 1000: 1.24V
+
 ![DAC Output Measurement 6](dac6.png)
+
+DAC Output Voltage for 750: 0.92V
 
 ![DAC Output Measurement 7](dac7.png)
 
+DAC Output Voltage for 500: 0.60V
+
 ![DAC Output Measurement 8](dac8.png)
+
+DAC Output Voltage for 250: 0.36V
 
 After measuring the time domain and frequency domain of our system at 425Hz, we captured the following output:
 
