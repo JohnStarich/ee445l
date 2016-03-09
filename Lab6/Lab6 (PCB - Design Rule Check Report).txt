@@ -6,8 +6,8 @@ Report Written:     Tuesday, March 08, 2016
 Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb
 Design Title:       
 Created:            1/28/2013 11:01:41 PM
-Last Saved:         3/8/2016 1:03:25 AM
-Editing Time:       759 min
+Last Saved:         3/8/2016 1:55:42 PM
+Editing Time:       818 min
 Units:              mil (precision 0)
 
 

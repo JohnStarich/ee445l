@@ -2,17 +2,19 @@ Design Consistency Status Report
 --------------------------------
 
 Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6 (PCB - Design Consistency Status Report).txt
-Report Written:     Monday, March 07, 2016
+Report Written:     Tuesday, March 08, 2016
 Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb
 Design Title:       
 Created:            1/28/2013 11:01:41 PM
-Last Saved:         3/8/2015 9:14:22 AM
-Editing Time:       615 min
+Last Saved:         3/8/2016 1:55:42 PM
+Editing Time:       818 min
 Units:              mil (precision 0)
 
 
 Checking integrity of Schematic "C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.sch" with PCB "C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb"
 ==============================================================================================================================================================================
+
+The designs are the same.
 
 
 End Of Report.
