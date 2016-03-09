@@ -80,7 +80,7 @@ Speaker noise
 
 Given the above output, we calculate our SNR to be 31.2dB according to this formula: `SNR = signal - noise = (-1.6dB) - (-32.8dB) = 31.2dB`
 
-The maximum time required to execute our periodic interrupt service routine is 1 microsecond and the time between our ISR calls is about 40 microseconds. Therefore the ratio of time spent in the ISR versus the main program is `1/40 = 0.025 = 2.5%`.
+The maximum time required to execute our periodic interrupt service routine is 2.09 microseconds and the time between our ISR calls is about 35.7 microseconds. Therefore the ratio of time spent in the ISR versus the main program is `2.09/35.7 = 0.059 = 5.9%`.
 
 ![ISR max execution time](isr_max_time.png)
 
