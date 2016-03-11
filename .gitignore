@@ -6,6 +6,10 @@ lm4f120.s
 tm4c123gh6pm.s
 *.pdf
 
+# PCB Artist files
+~*.sch
+~*.pcb
+
 # uVision Generated Files
 *.uvopt
 *.uvgui.*
