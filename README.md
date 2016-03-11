@@ -11,3 +11,9 @@ Feel free to look around!
 [Lab 2: Performance Debugging](Lab2/README.md)
 
 [Lab 3: Alarm Clock](Lab3/README.md)
+
+[Lab 4: Internet of Things](Lab4/README.md)
+
+[Lab 5: Music Player and Audio Amp](Lab5/README.md)
+
+[Lab 6: Introduction to PCB Design](Lab6/README.md)
