@@ -1,13 +1,13 @@
 Design Rule Check Report
 ------------------------
 
-Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6 (PCB - Design Rule Check Report).txt
-Report Written:     Tuesday, March 08, 2016
-Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb
+Report File:        C:\Users\johnstarich\Documents\EE445L\ValvanoWareTM4C123\Lab6\Lab6 (PCB - Design Rule Check Report).txt
+Report Written:     Saturday, March 12, 2016
+Design Path:        C:\Users\johnstarich\Documents\EE445L\ValvanoWareTM4C123\Lab6\Lab6.pcb
 Design Title:       
-Created:            1/28/2013 11:01:41 PM
-Last Saved:         3/8/2016 1:55:42 PM
-Editing Time:       818 min
+Created:            1/28/13 11:01:41 PM
+Last Saved:         3/11/16 8:53:33 PM
+Editing Time:       935 min
 Units:              mil (precision 0)
 
 

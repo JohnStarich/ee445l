@@ -1,17 +1,38 @@
 Forward Design Changes Report
 -----------------------------
 
-Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6 (PCB - Forward Design Changes Report).txt
-Report Written:     Tuesday, March 08, 2016
-Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab6\Lab6.pcb
+Report File:        C:\Users\johnstarich\Documents\EE445L\ValvanoWareTM4C123\Lab6\Lab6 (PCB - Forward Design Changes Report).txt
+Report Written:     Saturday, March 12, 2016
+Design Path:        C:\Users\johnstarich\Documents\EE445L\ValvanoWareTM4C123\Lab6\Lab6.pcb
 Design Title:       
-Created:            1/28/2013 11:01:41 PM
-Last Saved:         3/8/2016 1:41:04 PM
-Editing Time:       808 min
+Created:            1/28/13 11:01:41 PM
+Last Saved:         3/8/16 1:58:47 PM
+Editing Time:       818 min
 Units:              mil (precision 0)
 
-Connected pin "SW3-3" to net "+3.3".
-Connected pin "J5-2" to net "+3.3".
+Disconnected pin "PE4-1" from net "PE4".
+
+Deleted component reference "PE4".
+
+Added net "PB4".
+Added net "PB5".
+Added net "PB6".
+
+Connected pin "J3-16" to net "PB0".
+Connected pin "J3-15" to net "PB1".
+Connected pin "J3-14" to net "PB2".
+Connected pin "J3-13" to net "PB3".
+Connected pin "J3-12" to net "PB4".
+Connected pin "J3-11" to net "PB5".
+Connected pin "J3-10" to net "PB6".
+Connected pin "J3-9" to net "PE4".
+Connected pin "U1-1" to net "PB6".
+Connected pin "U1-57" to net "PB5".
+Connected pin "U1-58" to net "PB4".
+Connected pin "U1-48" to net "PB3".
+Connected pin "U1-47" to net "PB2".
+Connected pin "U1-46" to net "PB1".
+Connected pin "U1-45" to net "PB0".
 
 
 End Of Report.
