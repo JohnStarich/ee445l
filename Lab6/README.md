@@ -40,7 +40,9 @@ We have chosen to use a medium enclosure with enough space to house batteries. T
 
 ### Why this battery?
 
-<<<<<<<<<<<<<< insert explanation for how we chose the battery to use >>>>>>>>>>>>>>
+After measuring our board while just powering our display, we reached a peak current usage of about 71mA. Additionally, while we were driving the speaker, the peak current usage is about 83mA. Therefore, if we were to run the alarm for 24 hours (max current usage) then we would have used about `83 mA * 24 hr = 1992 mAh`. This battery has a total storage of 2800 mAh which should be more than enough to account for error in our measurements and last a full 24 hours.
+
+Since 7.4V is standard with their rechargeable batteries, we will be using a voltage regulator to adjust this down to an acceptable voltage.
 
 ## Analysis and Discussion
 
