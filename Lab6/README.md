@@ -62,4 +62,4 @@ Since 7.4V is standard with their rechargeable batteries, we will be using a vol
 
 ## Analysis and Discussion
 
-<<<<<<<<<<<<<< explain our testing procedure for this system >>>>>>>>>>>>>>
+We will test our system by connecting a power supply to the test points for the battery. We can also test the GPIO pins on Port B for debugging as well as PE4 which sets the speaker to high and low via the logic analyzer port. The pins on port B will be used so that if we run into any problems we can just hook up those pins to important signals and flash that new program to the board.
