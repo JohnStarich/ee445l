@@ -26,17 +26,33 @@ We have chosen to use a medium enclosure with enough space to house batteries. T
 
 ### Final Circuit Diagram
 
-<<<<<<<<<<<<<< insert SCH screenshot(s) >>>>>>>>>>>>>>
+![SCH 1](sch1.png)
+
+![SCH 2](sch2.png)
 
 ### Mockup
 
-<<<<<<<<<<<<<< insert cardboard mockup picture >>>>>>>>>>>>>>
+![Mockup top](mockup_top.png)
+
+Top copper and silk screen
+
+![Mockup bottom](mockup_bottom.png)
+
+Bottom copper and silk screen
+
+![Mockup top copper](mockup_top_copper.png)
+
+Top copper only
+
+![Mockup bottom copper](mockup_bottom_copper.png)
+
+Bottom copper only
 
 ## Measurement Data
 
 ### Bill of Materials
 
-<<<<<<<<<<<<<< insert bill of materials >>>>>>>>>>>>>>
+![Bill of Materials](Lab6BOM.csv)
 
 ### Why this battery?
 
