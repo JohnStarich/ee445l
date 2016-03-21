@@ -52,7 +52,7 @@ Bottom copper only
 
 ### Bill of Materials
 
-![Bill of Materials](Lab6BOM.csv)
+![Bill of Materials](bom.png)
 
 ### Why this battery?
 
