@@ -16,14 +16,6 @@ We have chosen to use a medium enclosure with enough space to house batteries. T
 
 ![enclosure drawing](enclosure.png)
 
-### Our new component
-
-<<<<<<<<<<<<<< insert 3-pages showing the new component we created and an example PCB using it >>>>>>>>>>>>>>
-
-### Mechanical Drawings
-
-<<<<<<<<<<<<<< insert 2 mechanical drawings >>>>>>>>>>>>>>
-
 ### Final Circuit Diagram
 
 ![SCH 1](sch1.png)
