@@ -8,9 +8,7 @@
 
 	3. Roles and Responsibilities: Who will do what?  Who are the clients?
 	EE445L students are the engineers and the TA is the client. For this project, 
-
 	Jon Ambrose will be responsible for circuit design layout and DAC sampling.
-
 	John Starich will be responsible for button and temperature interfacing.
 
 	4. Interactions with Existing Systems: How will it fit in?
