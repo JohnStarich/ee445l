@@ -1,0 +1,24 @@
+Forward Design Changes Report
+-----------------------------
+
+Report File:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab7\Lab7_TM4C123starter (PCB - Forward Design Changes Report).txt
+Report Written:     Thursday, March 24, 2016
+Design Path:        C:\Users\Jon\Documents\UT Schoolwork\EE445L\ee445l\Lab7\Lab7_TM4C123starter.pcb
+Design Title:       
+Created:            1/29/2013 12:01:41 AM
+Last Saved:         3/24/2016 11:49:21 PM
+Editing Time:       651 min
+Units:              mil (precision 0)
+
+Disconnected pin "J3-13" from net "PF3".
+Disconnected pin "J3-14" from net "PF2".
+Disconnected pin "J3-15" from net "PF1".
+
+Added net "PF0".
+
+Connected pin "J3-15" to net "PF0".
+Connected pin "J3-14" to net "PF1".
+Connected pin "J3-13" to net "PF2".
+
+
+End Of Report.
