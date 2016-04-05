@@ -36,9 +36,6 @@
 #include "PLL.h"
 #include "Timer0A.h"
 #include "Timer1A.h"
-#include "DAC.h"
-#include "Switch.h"
-#include "Music.h"
 #include "SysTick.h"
 #include "Buttons.h"
 
@@ -67,28 +64,18 @@ void PortF_Init(void) {
 	GPIO_PORTF_AMSEL_R = 0;						// disable analog functionality on PF
 }
 
-const Song song = {90, mary_lamb};
-const Song Prelude = {128, ff7_pre};
-bool Play_mode = false;
-void Pause(void);
-
-//debug code
 int main(void){ 
 	DisableInterrupts();
   PLL_Init(Bus80MHz);								// bus clock at 50 MHz
 	PortF_Init();
   LEDS = 0;													// turn all LEDs off
-	DAC_Init(0);
 	Buttons_Init();
 	SysTick_Init();
 	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
-  Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
+  //Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
   EnableInterrupts();
 		
-	Song_PlayInit(Prelude);
-	Pause();
-
-  while(1){
+	while(1){
 		//LEDS ^= RED;
 		for(int i = 0; i < 1000000; i += 1);
   }

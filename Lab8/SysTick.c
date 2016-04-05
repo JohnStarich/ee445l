@@ -39,8 +39,6 @@
 
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
-#include "Music.h"
-#include "DAC.h"
 
 #define NVIC_ST_CTRL_COUNT      0x00010000  // Count flag
 #define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
@@ -65,23 +63,8 @@ void SysTick_Init(void){
 // SysTick Interupt Handler
 extern uint32_t Systick_one_sec;
 
-uint32_t voiceIndex = 0;
-Note *previousNote = 0;
 void SysTick_Handler(void) {
 	PF1 = 0x03;
-	if(voiceIndex > 2000)
-		DAC_Output((Instrument_CurrentVoltage(voiceIndex)));
-	Note *newNote = Song_CurrentNote();
-	if(newNote != previousNote) {
-		previousNote = newNote;
-		if(newNote->pitch == 0)
-			NVIC_ST_RELOAD_R = 0;
-		else
-			NVIC_ST_RELOAD_R = 1252727/ newNote->pitch;
-			NVIC_ST_CURRENT_R = 0;
-		voiceIndex %= 64;
-	}
-	voiceIndex += 1;
 	PF1 = 0x00;
 }
 
