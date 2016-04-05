@@ -73,10 +73,19 @@ int main(void){
 	SysTick_Init();
 	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
   //Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
+	
+	/*
+	here we initialize our timers and our GPIO
+	for PE0 PE3 (TEC toggler and temperature sensor, respectively)
+	*/
+	
   EnableInterrupts();
 		
 	while(1){
-		//LEDS ^= RED;
+		/*
+		Here we will 
+		
+		*/
 		for(int i = 0; i < 1000000; i += 1);
   }
 }
