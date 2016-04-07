@@ -1,3 +1,9 @@
+// TEC.c
+// Runs on LM4F120/TM4C123
+// Software to control the Thermoelectric Cooling (TEC) plates
+// Jon Ambrose and John Starich
+// April 6, 2016
+
 #include <stdbool.h>
 #include "..//inc//tm4c123gh6pm.h"
 #include <stdint.h>
@@ -5,7 +11,6 @@
 int16_t TEC_Temp = 25;
 
 void TEC_Init(void) {
-	
 	SYSCTL_RCGCGPIO_R |= 0x10;        // activate port E
 	while((SYSCTL_PRGPIO_R & 0x0010) == 0){}; // wait for clock on port
 	GPIO_PORTE_DIR_R |= 0x01;         // set PE0 as output
@@ -24,7 +29,7 @@ void TEC_Stop(void){
 }
 
 bool TEC_Status(void){
- return GPIO_PORTE_DATA_R & 0x01;
+	return GPIO_PORTE_DATA_R & 0x01;
 }
 
 void TEC_Temp_Up(void){

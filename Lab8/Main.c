@@ -73,16 +73,16 @@ void PortF_Init(void) {
 int main(void){ 
 	
 	DisableInterrupts();
-  PLL_Init(Bus10MHz);								// bus clock at 10 MHz
+	PLL_Init(Bus10MHz);								// bus clock at 10 MHz
 	PortF_Init();
 	Buttons_Init();
 	SysTick_Init();
 	ST7735_InitR(INITR_REDTAB);
 	TEC_Init();
 	ADC0_InitSWTriggerSeq3_Ch0();
-  EnableInterrupts();
+	EnableInterrupts();
 		
-	while(1){
+	while(1) {
 
 		/*
 		convert ADC_sample to Current_Temp
@@ -113,7 +113,7 @@ int main(void){
 		
 		Current_Temp = ((ADC_Sample * 806) - 960000) / 31200;
 		
-		if(TEC_Get() >= Current_Temp){
+		if(TEC_Get() >= Current_Temp) {
 			TEC_Stop();
 		}
 		

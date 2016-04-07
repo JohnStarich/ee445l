@@ -11,5 +11,4 @@ void Buttons_Init(void);
 
 void Buttons_1ms_Handler(void);
 
-
 #endif
