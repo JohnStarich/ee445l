@@ -34,7 +34,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "PLL.h"
-#include "Timer0A.h"
 #include "Timer1A.h"
 #include "SysTick.h"
 #include "Buttons.h"
@@ -90,6 +89,7 @@ int main(void){
 	here we initialize our timers and our GPIO
 	for PE0 PE3 (TEC toggler and temperature sensor, respectively)
 	*/
+	Buttons_Init();
 	ADC0_InitSWTriggerSeq3_Ch0();
 	PortE_Init();
 	
