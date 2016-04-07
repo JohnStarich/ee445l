@@ -465,6 +465,16 @@
               <FileType>1</FileType>
               <FilePath>.\Buttons.c</FilePath>
             </File>
+            <File>
+              <FileName>ADCSWTrigger.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ADCSWTrigger.c</FilePath>
+            </File>
+            <File>
+              <FileName>ADCSWTrigger.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ADCSWTrigger.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
