@@ -38,6 +38,7 @@
 #include "Timer1A.h"
 #include "SysTick.h"
 #include "Buttons.h"
+#include "ADCSWTrigger.h"
 
 #define PF1       (*((volatile uint32_t *)0x40025008))
 #define PF2       (*((volatile uint32_t *)0x40025010))
@@ -64,6 +65,17 @@ void PortF_Init(void) {
 	GPIO_PORTF_AMSEL_R = 0;						// disable analog functionality on PF
 }
 
+void PortE_Init(void) {
+	SYSCTL_RCGCGPIO_R |= 0x10;        // activate port E
+	while((SYSCTL_PRGPIO_R & 0x0010) == 0){}; // wait for clock on port
+	GPIO_PORTE_DIR_R |= 0x01;         // set PE0 as output
+	GPIO_PORTE_AFSEL_R &= ~0x01;      // disable alternate functions on PE0
+	GPIO_PORTE_DEN_R |= 0x01;         // enable digital IO on PE0
+	
+	GPIO_PORTE_PCTL_R = (GPIO_PORTF_PCTL_R & 0xFFFFFFF0)+0x0;
+	GPIO_PORTE_AMSEL_R = 0;           // disable analog functionality on PE
+}
+
 int main(void){ 
 	DisableInterrupts();
   PLL_Init(Bus80MHz);								// bus clock at 50 MHz
@@ -78,13 +90,14 @@ int main(void){
 	here we initialize our timers and our GPIO
 	for PE0 PE3 (TEC toggler and temperature sensor, respectively)
 	*/
+	ADC0_InitSWTriggerSeq3_Ch0();
+	PortE_Init();
 	
   EnableInterrupts();
 		
 	while(1){
 		/*
-		Here we will 
-		
+		We will read the ADC, check for input, and print to the screen
 		*/
 		for(int i = 0; i < 1000000; i += 1);
   }

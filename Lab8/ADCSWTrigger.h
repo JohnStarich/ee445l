@@ -55,7 +55,7 @@
 // SS3 triggering event: software trigger
 // SS3 1st sample source: Ain9 (PE4)
 // SS3 interrupts: enabled but not promoted to controller
-void ADC0_InitSWTriggerSeq3_Ch9(void);
+void ADC0_InitSWTriggerSeq3_Ch0(void);
 
 // This initialization function sets up the ADC according to the
 // following parameters.  Any parameters not explicitly listed
