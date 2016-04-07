@@ -39,6 +39,9 @@
 
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
+#include "ADCSWTrigger.h"
+
+uint32_t ADC_Sample = 0;
 
 #define NVIC_ST_CTRL_COUNT      0x00010000  // Count flag
 #define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
@@ -48,6 +51,7 @@
 #define TRUE										1
 #define FALSE										0
 #define PF1       (*((volatile uint32_t *)0x40025008))
+#define PF3       (*((volatile uint32_t *)0x40025020))
 
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void){
@@ -64,8 +68,9 @@ void SysTick_Init(void){
 extern uint32_t Systick_one_sec;
 
 void SysTick_Handler(void) {
-	PF1 = 0x03;
-	PF1 = 0x00;
+	PF3 = 0x08;
+	ADC_Sample = ADC0_InSeq3();
+	PF3 = 0x00;
 }
 
 // Time delay using busy wait.

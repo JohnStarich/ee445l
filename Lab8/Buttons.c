@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "Buttons.h"
 #include "Timer1A.h"
+#include "TEC.h"
 
 void Buttons_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x20;        // 1) activate clock for Port F
@@ -35,14 +36,20 @@ void Buttons_ReadInput(void) {
 
 void Buttons_Pressed(uint32_t button) {
 	if(button == 0) { // Temp Down
+		TEC_Temp_Down();
 	}
 	else if(button == 1) { // Temp Up
+		TEC_Temp_Up();
 	}
 	else if (button == 2) { // Start/Stop
+		if(TEC_Status()){
+			TEC_Stop();
+		} 
+		else TEC_Start();
 	}
 }
 
-void Buttons_10ms_Handler(void) {
+void Buttons_1ms_Handler(void) {
 	Buttons_ReadInput();
 	for(uint32_t i = 0; i < 3; i += 1) {
 		if(debounce[i] > 0) {

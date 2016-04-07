@@ -9,7 +9,7 @@
 
 void Buttons_Init(void);
 
-void Buttons_10ms_Handler(void);
+void Buttons_1ms_Handler(void);
 
 
 #endif

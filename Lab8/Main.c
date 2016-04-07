@@ -33,11 +33,14 @@
 #include "..//inc//tm4c123gh6pm.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "PLL.h"
 #include "Timer1A.h"
 #include "SysTick.h"
 #include "Buttons.h"
 #include "ADCSWTrigger.h"
+#include "ST7735.h"
+#include "TEC.h"
 
 #define PF1       (*((volatile uint32_t *)0x40025008))
 #define PF2       (*((volatile uint32_t *)0x40025010))
@@ -46,6 +49,9 @@
 #define RED       0x02
 #define BLUE      0x04
 #define GREEN     0x08
+
+extern uint32_t ADC_Sample;
+int32_t Current_Temp = 25;
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -64,40 +70,61 @@ void PortF_Init(void) {
 	GPIO_PORTF_AMSEL_R = 0;						// disable analog functionality on PF
 }
 
-void PortE_Init(void) {
-	SYSCTL_RCGCGPIO_R |= 0x10;        // activate port E
-	while((SYSCTL_PRGPIO_R & 0x0010) == 0){}; // wait for clock on port
-	GPIO_PORTE_DIR_R |= 0x01;         // set PE0 as output
-	GPIO_PORTE_AFSEL_R &= ~0x01;      // disable alternate functions on PE0
-	GPIO_PORTE_DEN_R |= 0x01;         // enable digital IO on PE0
-	
-	GPIO_PORTE_PCTL_R = (GPIO_PORTF_PCTL_R & 0xFFFFFFF0)+0x0;
-}
-
 int main(void){ 
+	
 	DisableInterrupts();
-  PLL_Init(Bus80MHz);								// bus clock at 50 MHz
+  PLL_Init(Bus10MHz);								// bus clock at 10 MHz
 	PortF_Init();
-  LEDS = 0;													// turn all LEDs off
 	Buttons_Init();
 	SysTick_Init();
-	//Timer0A_Init(&Song_PlayHandler, F20KHZ);	// initialize timer0A (20,000 Hz)
-  //Timer0A_Init(&Song_PlayHandler, F16HZ);		// initialize timer0A (16 Hz)
-	
-	/*
-	here we initialize our timers and our GPIO
-	for PE0 PE3 (TEC toggler and temperature sensor, respectively)
-	*/
-	Buttons_Init();
+	ST7735_InitR(INITR_REDTAB);
+	TEC_Init();
 	ADC0_InitSWTriggerSeq3_Ch0();
-	PortE_Init();
-	
   EnableInterrupts();
 		
 	while(1){
+
 		/*
-		We will read the ADC, check for input, and print to the screen
+		convert ADC_sample to Current_Temp
+		Get TEC_Temp
+		Compare TEC_Temp with Current_Temp
+		Turn off if less than/equal to
+		
+		Display "Critical Can Cooler V1.0"
+		Display Current_Temp
+		Display TEC_temp
+		Display TEC_Status
 		*/
-		for(int i = 0; i < 1000000; i += 1);
-  }
+	
+		/*
+		Temp scale:
+		MAX 1740 mV or 2160 ADC measure = 25 C
+		MIN 960  mV or 1192 ADC measure = 0 C
+		
+		2160* .806mV/adctic = temp in mV
+		vo -480/15.6
+		
+		adc tics * .806mV/tic = sample in mV
+		(mV - 960) /31.2 = T
+		
+		((adc *806) - 960000) / 31200 = T
+		
+		*/
+		
+		Current_Temp = ((ADC_Sample * 806) - 960000) / 31200;
+		
+		if(TEC_Get() >= Current_Temp){
+			TEC_Stop();
+		}
+		
+		printf("Critical Can Cooler V1.0\nCurrent Temp: %d\nDesired Temp: %d\nTEC Status: ", Current_Temp, TEC_Get());
+		if(TEC_Status()) {
+			printf("ON\n");
+		}
+		else {
+			printf("OFF\n");
+		}
+		
+		WaitForInterrupt();
+	}
 }
