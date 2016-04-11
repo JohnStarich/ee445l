@@ -5,6 +5,7 @@
 lm4f120.s
 tm4c123gh6pm.s
 *.pdf
+*.iex
 
 # PCB Artist files
 ~*.sch
