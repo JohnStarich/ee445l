@@ -59,29 +59,19 @@ long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
-void PortF_Init(void) {
-	SYSCTL_RCGCGPIO_R |= 0x20;				// activate port F
-	while((SYSCTL_PRGPIO_R&0x0020) == 0){};// ready?
-	GPIO_PORTF_DIR_R &= ~0x07;					// make PF2-0 input (PF2-0 built-in LEDs)
-	GPIO_PORTF_AFSEL_R &= ~0x07;			// disable alt funct on PF2-0
-	GPIO_PORTF_DEN_R |= 0x07;					// enable digital I/O on PF2-0
-																		// configure PF2-0 as GPIO
-	GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF000)+0x00000000;
-	GPIO_PORTF_AMSEL_R = 0;						// disable analog functionality on PF
-}
-
 int main(void){ 
 	
 	DisableInterrupts();
 	PLL_Init(Bus10MHz);								// bus clock at 10 MHz
-	PortF_Init();
 	Buttons_Init();
 	SysTick_Init();
 	ST7735_InitR(INITR_REDTAB);
 	TEC_Init();
 	ADC0_InitSWTriggerSeq3_Ch0();
-	EnableInterrupts();
 		
+	printf("Critical Can Cooler\nV1.0\n\nCurrent Temp: \nDesired Temp: \nTEC Status: ");
+	
+	EnableInterrupts();
 	while(1) {
 
 		/*
@@ -111,15 +101,18 @@ int main(void){
 		
 		*/
 		
-		Current_Temp = ((ADC_Sample * 806) - 960000) / 31200;
+		Current_Temp = (((int32_t)ADC_Sample * 806) - 960000) / 31200;
 		
-		if(TEC_Get() >= Current_Temp) {
-			TEC_Stop();
-		}
-		
-		printf("Critical Can Cooler V1.0\nCurrent Temp: %d\nDesired Temp: %d\nTEC Status: ", Current_Temp, TEC_Get());
+		//if(TEC_Get() > Current_Temp) {
+		//	TEC_Stop();
+		//}
+		ST7735_SetCursor(14,3);
+		printf("%-3d",Current_Temp);
+		ST7735_SetCursor(14,4);
+		printf("%d",TEC_Get());
+		ST7735_SetCursor(14,5);
 		if(TEC_Status()) {
-			printf("ON\n");
+			printf("ON \n");
 		}
 		else {
 			printf("OFF\n");
