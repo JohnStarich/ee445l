@@ -44,7 +44,7 @@
 #include "PLL.h"
 #include "SysTick.h"
 #include "ADCSWTrigger.h"
-#include "ST7735.h"
+//#include "ST7735.h"
 
 extern uint32_t ADC_Sample;
 
@@ -58,10 +58,15 @@ int main(void){
 	DisableInterrupts();
 	PLL_Init(Bus10MHz);	// bus clock at 10 MHz
 	SysTick_Init();
-	ST7735_InitR(INITR_REDTAB);
+	//ST7735_InitR(INITR_REDTAB);
 	ADC0_InitSWTriggerSeq3_Ch0();
 		
 	EnableInterrupts();
+	
+	for(int i = 0; i < 100/2; i += 1) {
+		printf("%d %d\n", ADC0_InSeq3(), ADC0_InSeq3());
+	}
+	
 	while(1) {
 	}
 }

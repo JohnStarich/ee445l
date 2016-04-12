@@ -79,17 +79,24 @@ void ADC0_InitSWTriggerSeq3_Ch0(void){
   ADC0_ACTSS_R |= 0x0008;         // 14) enable sample sequencer 3
 }
 
+uint32_t data[100];
+uint32_t currentIndex = 0;
 
 //------------ADC0_InSeq3------------
 // Busy-wait Analog to digital conversion
 // Input: none
 // Output: 12-bit result of ADC conversion
 uint32_t ADC0_InSeq3(void){
-	uint32_t result;
-  ADC0_PSSI_R = 0x0008;            // 1) initiate SS3
-  while((ADC0_RIS_R&0x08)==0){};   // 2) wait for conversion done
-    // if you have an A0-A3 revision number, you need to add an 8 usec wait here
-  result = ADC0_SSFIFO3_R&0xFFF;   // 3) read result
-  ADC0_ISC_R = 0x0008;             // 4) acknowledge completion
-  return result;
+	if(currentIndex < 100) {
+		uint32_t result;
+		ADC0_PSSI_R = 0x0008;            // 1) initiate SS3
+		while((ADC0_RIS_R&0x08)==0){};   // 2) wait for conversion done
+			// if you have an A0-A3 revision number, you need to add an 8 usec wait here
+		result = ADC0_SSFIFO3_R&0xFFF;   // 3) read result
+		ADC0_ISC_R = 0x0008;             // 4) acknowledge completion
+
+		data[currentIndex++] = result;
+		return result;
+	}
+	return 0;
 }
