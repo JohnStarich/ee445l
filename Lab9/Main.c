@@ -37,14 +37,15 @@
  *
  * To see if we've finished ADC conversion we check the ADC0_RIS_R memory address.
  */
-#include "..//inc//tm4c123gh6pm.h"
+ 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include "PLL.h"
-#include "SysTick.h"
+
 #include "ADCSWTrigger.h"
-//#include "ST7735.h"
+#include "UART.h"
+
+#include "PLL.h"
 
 extern uint32_t ADC_Sample;
 
@@ -54,19 +55,25 @@ long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
+extern uint32_t currentIndex;
+extern uint32_t data[100];
+
 int main(void){ 
 	DisableInterrupts();
-	PLL_Init(Bus10MHz);	// bus clock at 10 MHz
-	SysTick_Init();
+	PLL_Init(Bus80MHz);	// bus clock at 80 MHz
+	UART_Init();
 	//ST7735_InitR(INITR_REDTAB);
 	ADC0_InitSWTriggerSeq3_Ch0();
 		
 	EnableInterrupts();
 	
-	for(int i = 0; i < 100/2; i += 1) {
-		printf("%d %d\n", ADC0_InSeq3(), ADC0_InSeq3());
+	UART_OutString("Points: \r\n");
+	while(currentIndex < 100);
+	for(int i = 0; i < 100; i += 1) {
+		UART_OutUDec(data[i]);
+		UART_OutString("\r\n");
 	}
-	
+
 	while(1) {
 	}
 }
