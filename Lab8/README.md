@@ -106,3 +106,11 @@ We measured a delta of about 40 degrees Celsius. This should be more than enough
 To ensure our device does not draw more current than our power supply is capable of providing, we measured the current needed to drive the TECs.
 
 We measured one plate used 0.955A at 4V. Since the current draw and voltage drop is linear for our TECs, this means a total current draw of about 3A at 12V. We will also be increasing the number of TEC plates we will use to three. Since we are putting these plates in series with each other, the current will drop below 3A, thereby fitting our current maximum of 3A from our DC power supply.
+
+## Worries
+
+Our top three worries are as follows:
+
+1. Power - We want to be sure our power draw does not malfunction and damage our device. If things get too hot (components do not dissipate power sufficiently) our circuit would be damaged.
+2. Cooling time - Will it be able to cool fast enough? We expect the device to cool a can in under an hour.
+3. Stable temperature reading - We would like our temperature sensor's input to be relatively stable so that our device does not malfunction if the value jumps too high.
