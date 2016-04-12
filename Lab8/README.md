@@ -95,3 +95,14 @@ int16_t TEC_Get(void){
 
 ## Measurement Data
 
+### Cooling vs Heating Delta
+
+After running our TECs for about a minute we measure the temperature difference between the two sides of the plate to ensure it was able to pump away heat successfully.
+
+We measured a delta of about 40 degrees Celsius. This should be more than enough of a temperature difference to cool the can after we attach our heat sinks in the final design.
+
+### Current Draw
+
+To ensure our device does not draw more current than our power supply is capable of providing, we measured the current needed to drive the TECs.
+
+We measured one plate used 0.955A at 4V. Since the current draw and voltage drop is linear for our TECs, this means a total current draw of about 3A at 12V. We will also be increasing the number of TEC plates we will use to three. Since we are putting these plates in series with each other, the current will drop below 3A, thereby fitting our current maximum of 3A from our DC power supply.

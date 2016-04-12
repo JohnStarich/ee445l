@@ -32,9 +32,8 @@
     A prototype system running on the TM4C123 board and solderless breadboard will be demonstrated. Progress will be judged through multiple lab sessions with the TA’s.
 
     4. Performance: Define the measures and describe how they will be determined.
-    Cooling time - How long the system takes to cool a can to the desired temperature.
-    Accuracy - How accurate the temperature readings are.
-    Reliability – How consistently the can is cooled from and to the same temperatures.
+    Cooling vs Heating delta - The difference in temperature between the hot and cold sides of the TECs.
+    Current draw - The effective current draw is small enough to run from a DC power supply.
 
     5. Usability: Describe the interfaces. Be quantitative if possible.
     There will be temperature set switches and a start/stop switch. One LCD display, one temperature sensor, and one to three thermoelectric cooling plates. There will be an LED indicater when the system is powered.
