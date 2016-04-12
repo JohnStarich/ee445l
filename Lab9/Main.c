@@ -31,9 +31,11 @@
  * 2. Signal period trigger - Time difference between two edges of both rising or both falling edge
  * 3. Signal pulse trigger - Time difference between two edges of opposite edges
  *
- * We check to see if we've sampled by looking at the
+ * We check to see if we've begun sampling by looking at the
  * CaptureA Event Raw Interrupt Status (CAERIS) interrupt flag.
  * This is triggered at every interrupt for sampling.
+ *
+ * To see if we've finished ADC conversion we check the ADC0_RIS_R memory address.
  */
 #include "..//inc//tm4c123gh6pm.h"
 #include <stdint.h>
