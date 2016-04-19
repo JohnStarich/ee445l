@@ -42,12 +42,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "ADCSWTrigger.h"
+#include "ADCTimerTrigger.h"
+#include "ST7735.h"
 #include "UART.h"
-
 #include "PLL.h"
-
-extern uint32_t ADC_Sample;
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -62,18 +60,28 @@ int main(void){
 	DisableInterrupts();
 	PLL_Init(Bus80MHz);	// bus clock at 80 MHz
 	UART_Init();
-	//ST7735_InitR(INITR_REDTAB);
-	ADC0_InitSWTriggerSeq3_Ch0();
+	ST7735_InitR(INITR_REDTAB);
+	ADC0_InitTimerTriggerSeq3_Ch0();
 		
 	EnableInterrupts();
 	
+	/*
 	UART_OutString("Points: \r\n");
 	while(currentIndex < 100);
 	for(int i = 0; i < 100; i += 1) {
 		UART_OutUDec(data[i]);
 		UART_OutString("\r\n");
 	}
-
+	*/
 	while(1) {
+		ST7735_SetCursor(0, 0);
+		printf("Temperature %5d\n", ADC_FIFO_CurrentValue());
+		ST7735_PlotClear(32, 159);
+		//TODO change color?
+		
+		for(int i = 0; i < FIFO_SIZE; i += 1) {
+			ST7735_DrawPixel(i, ADC_FIFO_Get()[i] % 100, ST7735_RED);
+		}
+		WaitForInterrupt();
 	}
 }

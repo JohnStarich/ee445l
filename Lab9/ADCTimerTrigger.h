@@ -1,9 +1,9 @@
-// ADCSWTrigger.h
+// ADCTimerTrigger.h
 // Runs on TM4C123
 // Provide functions that initialize ADC0 SS3 to be triggered by
 // software and trigger a conversion, wait for it to finish,
 // and return the result.
-// Daniel Valvano
+// John Starich and Jon Ambrose
 // August 6, 2015
 
 /* This example accompanies the book
@@ -38,12 +38,6 @@
 // approach has the advantage of being simple.  However, it does
 // not guarantee real-time.
 //
-// A better approach would be to use a hardware timer to trigger
-// the ADC0 conversion independently from software and generate
-// an interrupt when the conversion is finished.  Then, the
-// software can transfer the conversion result to memory and
-// process it after all measurements are complete.
-
 // This initialization function sets up the ADC according to the
 // following parameters.  Any parameters not explicitly listed
 // below are not modified:
@@ -55,36 +49,17 @@
 // SS3 triggering event: software trigger
 // SS3 1st sample source: Ain9 (PE4)
 // SS3 interrupts: enabled but not promoted to controller
-void ADC0_InitSWTriggerSeq3_Ch0(void);
+#ifndef ADC_TRIGGER
+#define ADC_TRIGGER 1
 
-// This initialization function sets up the ADC according to the
-// following parameters.  Any parameters not explicitly listed
-// below are not modified:
-// Max sample rate: <=125,000 samples/second
-// Sequencer 0 priority: 1st (highest)
-// Sequencer 1 priority: 2nd
-// Sequencer 2 priority: 3rd
-// Sequencer 3 priority: 4th (lowest)
-// SS3 triggering event: software trigger
-// SS3 1st sample source: programmable using variable 'channelNum' [0:7]
-// SS3 interrupts: enabled but not promoted to controller
-void ADC0_InitSWTriggerSeq3(uint32_t channelNum);
+#define FIFO_SIZE 100
 
-// This initialization function sets up the ADC according to the
-// following parameters.  Any parameters not explicitly listed
-// below are not modified:
-// Max sample rate: <=125,000 samples/second
-// Sequencer 0 priority: 1st (highest)
-// Sequencer 1 priority: 2nd
-// Sequencer 2 priority: 3rd
-// Sequencer 3 priority: 4th (lowest)
-// SS3 triggering event: always trigger
-// SS3 1st sample source: programmable using variable 'channelNum' [0:11]
-// SS3 interrupts: enabled but not promoted to controller
-void ADC0_InitAllTriggerSeq3(uint32_t channelNum);
+void ADC0_InitTimerTriggerSeq3_Ch0(void);
 
-//------------ADC0_InSeq3------------
-// Busy-wait Analog to digital conversion
-// Input: none
-// Output: 12-bit result of ADC conversion
-uint32_t ADC0_InSeq3(void);
+int32_t ADC_FIFO_Pop(void);
+
+int32_t* ADC_FIFO_Get(void);
+
+int32_t ADC_FIFO_CurrentValue(void);
+
+#endif
