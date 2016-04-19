@@ -1,4 +1,4 @@
-// ADCSWTrigger.c
+// ADCTimerTrigger.c
 // Runs on TM4C123
 // Provide functions that initialize ADC0 SS3 to be triggered by
 // software and trigger a conversion, wait for it to finish,
@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 
+#define FIFO_SIZE 100
+
 // There are many choices to make when using the ADC, and many
 // different combinations of settings will all do basically the
 // same thing.  For simplicity, this function makes some choices
@@ -46,6 +48,10 @@
 // software can transfer the conversion result to memory and
 // process it after all measurements are complete.
 
+int32_t fifo[FIFO_SIZE];
+int32_t fifoStart = 0;
+int32_t fifoEnd = 0;
+
 // This initialization function sets up the ADC according to the
 // following parameters.  Any parameters not explicitly listed
 // below are not modified:
@@ -57,7 +63,7 @@
 // SS3 triggering event: software trigger
 // SS3 1st sample source: Ain9 (PE4)
 // SS3 interrupts: enabled but not promoted to controller
-void ADC0_InitSWTriggerSeq3_Ch0(void){
+void ADC0_InitTimerTriggerSeq3_Ch0(void){
 	volatile uint32_t delay;
   SYSCTL_RCGCADC_R |= 0x0001;   // 7) activate ADC0
   SYSCTL_RCGCGPIO_R |= 0x10;    // 1) activate clock for Port E
@@ -89,27 +95,53 @@ void ADC0_InitSWTriggerSeq3_Ch0(void){
   //ADC0_SSMUX3_R += 0;           // set channel to 0
   ADC0_SSCTL3_R = 0x0006;         // 12) no TS0 D0, yes IE0 END0
   ADC0_IM_R |= 0x0008;						// 13) disable SS3 interrupts
-  ADC0_SAC_R |= 0x0;//0x6         // enable x64 sampling
+  ADC0_SAC_R |= 0x6;              // enable x64 sampling
   ADC0_ACTSS_R |= 0x0008;         // 14) enable sample sequencer 3
 	
 	NVIC_PRI4_R = (NVIC_PRI4_R & ~0x0FF00) | 0x04000; // timer0 priority 2
 	NVIC_EN0_R = 1 << 17;						// enable interrupt 17 in NVIC
+	
+	// "zero" out with bad data
+	for(int i = 0; i < FIFO_SIZE; i += 1) {
+		fifo[i] = -1;
+	}
 }
 
-uint32_t data[100];
-uint32_t currentIndex = 0;
+void ADC_FIFO_Push(int32_t data) {
+	int32_t nextFifoEnd = (fifoEnd + 1) % FIFO_SIZE;
+	if(nextFifoEnd == fifoStart) {
+		return;
+	}
+	fifoEnd = nextFifoEnd;
+	fifo[fifoEnd] = data;
+}
+
+int32_t ADC_FIFO_Pop(void) {
+	if(fifoStart == fifoEnd) {
+		return -1;
+	}
+	int32_t poppedValue = fifo[fifoStart];
+	fifoStart = (fifoStart + 1) % FIFO_SIZE;
+	return poppedValue;
+}
 
 //------------ADC0_InSeq3------------
 // Busy-wait Analog to digital conversion
 // Input: none
 // Output: 12-bit result of ADC conversion
 void ADC0Seq3_Handler(void){
-	ADC0_ISC_R = 0x0008;             // 4) acknowledge completion
-	if(currentIndex < 100) {
-		uint32_t result;
-			// if you have an A0-A3 revision number, you need to add an 8 usec wait here
-		result = ADC0_SSFIFO3_R&0xFFF;   // 3) read result
-		data[currentIndex] = result;
-		currentIndex += 1;
+	ADC0_ISC_R = 0x0008;
+	uint32_t result = ADC0_SSFIFO3_R&0xFFF;
+	if((fifoStart + 1) % FIFO_SIZE == fifoEnd) {
+		ADC_FIFO_Pop();
 	}
+	ADC_FIFO_Push(result);
+}
+
+int32_t* ADC_FIFO_Get(void) {
+	return fifo;
+}
+
+int32_t ADC_FIFO_CurrentValue(void) {
+	return fifo[fifoStart];
 }
