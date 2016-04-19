@@ -52,7 +52,7 @@
 #ifndef ADC_TRIGGER
 #define ADC_TRIGGER 1
 
-#define FIFO_SIZE 100
+#define FIFO_SIZE 160
 
 void ADC0_InitTimerTriggerSeq3_Ch0(void);
 
