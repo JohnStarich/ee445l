@@ -33,7 +33,7 @@ void Button2(void){
 int main(void) {
 	PLL_Init(Bus80MHz);             // bus clock at 50 MHz
   Tach_Init();										// initialize the Tach measureing input capture
-	PWM0A_Init(40000, 30000); 			// 1000 Hz
+	PWM0B_Init(40000, 30000); 			// 1000 Hz
 	Buttons_Init();
 	ST7735_InitR(INITR_REDTAB);
 	SysTick_Init();

@@ -8,8 +8,8 @@
 
 uint32_t Period;
 int32_t Overflow;
+uint32_t static First;        // Timer0A first edge, 12.5 ns units
 int32_t Done;
-uint32_t static Cnt;
 extern uint32_t Target_Speed;
 uint32_t Speed;      // motor speed in 0.1 rps
 int32_t E = 0;           // speed error in 0.1 rps
@@ -20,83 +20,55 @@ void EnableInterrupts(void);  // Enable interrupts
 
 void Tach_Init(void){
 
-	SYSCTL_RCGC1_R |= SYSCTL_RCGC1_TIMER0;
-	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOC + SYSCTL_RCGC2_GPIOD;
-	Period = 0;
-	Overflow = 0;
-	Done = 0;
-	Cnt = 0;
-	GPIO_PORTC_DIR_R |= 0X20;
-	GPIO_PORTC_DEN_R |= 0X20;
-	GPIO_PORTD_AFSEL_R |= 0X10;													// PD4 is the Tachometer input
-	TIMER0_CTL_R &= ~(TIMER_CTL_TAEN|TIMER_CTL_TBEN);
-	TIMER0_CFG_R = TIMER_CFG_16_BIT;
-	
-	//timer0a init
-	TIMER0_TAMR_R = (TIMER_TAMR_TACMR|TIMER_TAMR_TAMR_CAP);
-	TIMER0_CTL_R &= ~TIMER_CTL_TAEVENT_M;
-	TIMER0_CTL_R += TIMER_CTL_TAEVENT_POS;
-	TIMER0_TAILR_R = TIMER_TAILR_M;
-	TIMER0_IMR_R |= TIMER_IMR_CAEIM;
-	TIMER0_ICR_R = TIMER_ICR_CAECINT;
-	
-	//timer0b init
-	TIMER0_TBMR_R = TIMER_TBMR_TBMR_PERIOD;
-	TIMER0_TBILR_R = 6000;
-	TIMER0_IMR_R |= TIMER_IMR_TBTOIM;
-	TIMER0_ICR_R = TIMER_ICR_TBTOCINT;
-	TIMER0_CTL_R |= TIMER_CTL_TBEN;
-	
-	//interrupt init
-	NVIC_PRI4_R = (NVIC_PRI4_R & 0x00FFFFFF) | 0x40000000;
-	NVIC_PRI5_R = (NVIC_PRI5_R & 0xFFFFFF00) | 0x00000040;
-	NVIC_EN0_R = (1<<19 | 1<<20);
-	EnableInterrupts();
+	SYSCTL_RCGCTIMER_R |= 0x01;      // activate timer0
+  SYSCTL_RCGCGPIO_R |= 0x02;       // activate port B
+  First = 0;                       // first will be wrong
+  Done = 0;                        // set on subsequent
+  GPIO_PORTB_DIR_R &= ~0x40;       // make PB6 input
+  GPIO_PORTB_AFSEL_R |= 0x40;      // enable alt funct on PB6
+  GPIO_PORTB_DEN_R |= 0x40;        // configure PB6 as T0CCP0
+  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xF0FFFFFF)+0x07000000;
+  TIMER0_CTL_R &= ~0x00000001;     // disable timer0A during setup
+  TIMER0_CFG_R = 0x00000004;       // configure for 16-bit capture mode
+  TIMER0_TAMR_R = 0x00000007;      // configure for rising edge event
+  TIMER0_CTL_R &= ~0x0000000C;     // rising edge
+  TIMER0_TAILR_R = 0x0000FFFF;     // start value
+  TIMER0_TAPR_R = 0xFF;            // activate prescale, creating 24-bit 
+  TIMER0_IMR_R |= 0x00000004;      // enable capture match interrupt
+  TIMER0_ICR_R = 0x00000004;       // clear timer0A capture match flag
+  TIMER0_CTL_R |= 0x00000001;      // timer0A 24-b, +edge, interrupts
+  NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; //Timer0A=priority 2
+  NVIC_EN0_R = 1<<19;              // enable interrupt 19 in NVIC
+  EnableInterrupts();
+
 }
 
 void Timer0A_Handler(void){
-	TIMER0_ICR_R = TIMER_ICR_CAECINT;
+	TIMER0_ICR_R = 0x00000004;       // acknowledge timer0A
 	
-	if(Overflow){
-		Period = 4294967295;
-		Overflow = 0;
-	}
+	GPIO_PORTF_DATA_R ^= 0x08;			// heartbeat
 	
-	else{
-		Period = Cnt;
-	}
-	Cnt = 0;
-	Done = -1;
+  Period = (First - TIMER0_TAR_R)&0x00FFFFFF; 
+// 24-bit, 12.5ns resolution
+  First = TIMER0_TAR_R;            // setup for next
+  Done = 1;                        // set semaphore
 	
-	TIMER0_CTL_R &= ~TIMER_CTL_TBEN;
-	TIMER0_TBILR_R = 6000;
-	TIMER0_ICR_R = TIMER_ICR_TBTOCINT;
-	TIMER0_CTL_R |= TIMER_CTL_TBEN;
+	Speed = 200000000/Period; // 0.1 rps
 	
 	if(PID_delay == 0){
-
-		Speed = 200000000/Period; // 0.1 rps
 		E = Target_Speed-Speed;   // 0.1 rps
 		U = U+(STABILITY_COEFFICIENT*E)/64;  // discrete integral
 		if(U < 100) U=100;        // Constrain output
 		if(U>39900) U=39900;      // 100 to 39900
-		PWM0A_Duty(U);            // output
+		PWM0B_Duty(U);            // output
 		PID_delay = PID_DELAY_VALUE;
 	}
 	else {
 		PID_delay -= 1;
 	}
-};
-
-void Timer0B_Handler(void){
-
-	PC5 = 0x20;
-	TIMER0_ICR_R = TIMER_ICR_TBTOCINT;
-	Cnt = Cnt + 1;
-	if(Cnt == 0){
-		Overflow = -1;
-	}
-	PC5 = 0x00;
+	
+	//GPIO_PORTF_DATA_R &= ~0x08;			// heartbeat
+	
 };
 
 uint32_t Tach_GetPeriod(void) {
