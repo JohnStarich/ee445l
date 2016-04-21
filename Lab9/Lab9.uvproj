@@ -446,16 +446,6 @@
               <FilePath>.\UART.c</FilePath>
             </File>
             <File>
-              <FileName>Temperature_Convert.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Temperature_Convert.h</FilePath>
-            </File>
-            <File>
-              <FileName>Temperature_Convert.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Temperature_Convert.c</FilePath>
-            </File>
-            <File>
               <FileName>ADCTimerTrigger.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ADCTimerTrigger.c</FilePath>
@@ -464,6 +454,16 @@
               <FileName>ADCTimerTrigger.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\ADCTimerTrigger.h</FilePath>
+            </File>
+            <File>
+              <FileName>calib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\calib.c</FilePath>
+            </File>
+            <File>
+              <FileName>calib.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\calib.h</FilePath>
             </File>
           </Files>
         </Group>
