@@ -186,13 +186,57 @@ int main(void) {
 
 ## Measurement Data
 
+![Signal Analysis](nyquist.png)
 
+| R (kΩ) |     | Vs (V) | V2 (V) | V2 - V3 (V) |
+| ------ | --- | ------ | ------ | ----------- |
+| 115    | Min | 2.762  | 0.984  | 0.064       |
+|        | Max | 2.985  | 1.188  | 0.220       |
+| 100    | Min | 2.027  | 1.098  | 0.137       |
+|        | Max | 2.040  | 1.118  | 0.157       |
+| 90     | Min | 1.206  | 0.942  | 0.031       |
+|        | Max | 1.223  | 1.055  | 0.094       |
+| 80     | Min | 0.265  | 0.906  | 0.006       |
+|        | Max | 0.344  | 0.987  | 0.026       |
+| open   | Min | 3.14   | 2.12   | 1.93        |
+|        | Max | 3.26   | 2.24   | 2.08        |
+| short  | Min | -0.09  | -0.14  | -0.4        |
+|        | Max | 0.09   | 0.14   | -0.09       |
+
+![Gain vs Frequency](gainvfrequency.png)
+
+| True temp (°C) | Measured Temp (°C) | Difference |
+| -------------- | ------------------ | ---------- |
+| 33.1           | 34.6               | 1.5        |
+| 33.1           | 35.2               | 2.1        |
+| 33.1           | 35.4               | 2.3        |
+| 33.1           | 35.1               | 2.0        |
+| 33.1           | 34.8               | 1.7        |
+| 33.1           | 35.0               | 1.9        |
+
+Average difference: 1.92
+
+|             | T            | T²      |
+| ----------- | ------------:| -------:|
+|             | 29.28        | 857.318 |
+|             | 29.31        | 859.076 |
+|             | 29.34        | 860.836 |
+|             | 29.30        | 858.490 |
+|             | 29.28        | 857.318 |
+|             | 29.32        | 859.662 |
+|             | 29.27        | 856.733 |
+|             | 29.26        | 856.148 |
+|             | 29.25        | 855.563 |
+|             | 29.28        | 857.318 |
+| Expectation | 29.29        | 857.846 |
+| Var(T)      | 0.000709     |         |
+| Std Dev     | 0.026627054  |         |
 
 ## Analysis and Discussion
 
-1. .
-2. .
+1. The Nyquist theorem refers to the minimum sampling frequency required to capture the original waveform through data sampling and the waveform still retain its shape. It states the sampling frequency must be at least twice that of the input frequency. In this lab, we had to sample at least twice our input frequency (10Hz) so we needed to sample at 20Hz or greater.
+2. Resolution is the smallest step of change in value in a system. Accuracy refers to the correctness of information captured. In our temperature acquisition system where temperature information is converted to voltage values by thermistor and acquired by analog-to-digital conversion interface, resolution in the digital system refers to the voltage changes by number of discrete digital inputs of the microcontroller. Accuracy is the variance between acquired temperature information in the digital system and the actual environmental temperature information measured by most other devices.
 3. .
-4. .
+4. ​Low pass filter is used for removing high frequency noise that may be present in the captured temperature waveform. Potential sources of noise include the power line interference (at 60Hz) and its harmonics.
 5. .
-6. .
+6. The linear method was not chosen because of the error that would have occurred when trying to represent the nonlinear relationship the temperature and ADC values. A large lookup table is better because it takes less time to just look up a temperature from an ADC value, rather than interpolating or using a formula to calculate a temperature. One drawback is the large amount of space the lookup tables take up. However, for this lab, this memory space usage was not an issue. So a linear equation (or equation of any sort) would require little to no space in memory, and would be better in this way.

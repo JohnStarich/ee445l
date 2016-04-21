@@ -46,7 +46,7 @@
 #include "ST7735.h"
 #include "UART.h"
 #include "PLL.h"
-#include "Temperature_Convert.h"
+#include "calib.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
