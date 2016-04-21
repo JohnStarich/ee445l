@@ -21,12 +21,14 @@ void WaitForInterrupt(void);  // low power mode
 uint32_t Target_Speed = 300;				// initial 30 rps
 
 void Button0(void){
-	if(Target_Speed != 400){ Target_Speed += 50; }
+	//if(Target_Speed != 400){ Target_Speed += 50; }
 };
 void Button1(void){
 	if(Target_Speed != 0){ Target_Speed -= 50; }
 };
-void Button2(void){}; // no button 2 yet
+void Button2(void){
+	if(Target_Speed != 400){ Target_Speed += 50; }
+}
 
 int main(void) {
 	PLL_Init(Bus80MHz);             // bus clock at 50 MHz

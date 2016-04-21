@@ -9,10 +9,11 @@ void Buttons_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x20;        // 1) activate clock for Port F
   while((SYSCTL_PRGPIO_R&0x20)==0); // allow time for clock to start
                                     // 2) no need to unlock PF0-2
-  GPIO_PORTF_PCTL_R &= ~0x0000FFFF; // 3) regular GPIO
-  GPIO_PORTF_AMSEL_R &= ~0x0F;      // 4) disable analog function on PF0-2
+  GPIO_PORTF_PCTL_R &= ~0x000FFFFF; // 3) regular GPIO
+  GPIO_PORTF_AMSEL_R &= ~0x07;      // 4) disable analog function on PF0-2
                                     // 5) no pullup for external switches
-  GPIO_PORTF_DIR_R &= ~0x0F;        // 5) set direction to input
+  GPIO_PORTF_DIR_R &= ~0x07;        // 5) set direction to input
+	GPIO_PORTF_DIR_R |= 0x08;
   GPIO_PORTF_AFSEL_R &= ~0x0F;      // 6) regular port function
   GPIO_PORTF_DEN_R |= 0x0F;         // 7) enable digital port
 	
