@@ -98,3 +98,11 @@ void Timer0B_Handler(void){
 	}
 	PC5 = 0x00;
 };
+
+uint32_t Tach_GetPeriod(void) {
+	return Period;
+}
+
+uint32_t Tach_GetSpeed(void) {
+	return Speed;
+}
