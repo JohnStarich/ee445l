@@ -46,6 +46,7 @@
 #include "ST7735.h"
 #include "UART.h"
 #include "PLL.h"
+#include "Temperature_Convert.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -75,12 +76,17 @@ int main(void){
 	*/
 	while(1) {
 		ST7735_SetCursor(0, 0);
-		printf("Temperature %5d\n", ADC_FIFO_CurrentValue());
+		int32_t currentTemperature = Temperature_Convert(ADC_FIFO_CurrentValue());
+		printf("Temperature %5d.%02d\n", currentTemperature / 100, currentTemperature % 100);
 		ST7735_PlotClear(32, 159);
 		//TODO change color?
 		
 		for(int i = 0; i < FIFO_SIZE; i += 1) {
-			ST7735_DrawPixel(i, ADC_FIFO_Get()[i] % 100, ST7735_RED);
+			int32_t point = 128 - Temperature_Convert(ADC_FIFO_Get()[i]) * 2 / 100;
+			ST7735_DrawPixel(i+1, point+1, ST7735_RED);
+			ST7735_DrawPixel(i+1, point, ST7735_RED);
+			ST7735_DrawPixel(i, point+1, ST7735_RED);
+			ST7735_DrawPixel(i, point, ST7735_RED);
 		}
 		WaitForInterrupt();
 	}
