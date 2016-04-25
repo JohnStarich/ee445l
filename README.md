@@ -17,3 +17,13 @@ Feel free to look around!
 [Lab 5: Music Player and Audio Amp](Lab5/README.md)
 
 [Lab 6: Introduction to PCB Design](Lab6/README.md)
+
+[Lab 7: Design and Layout of an Embedded System](Lab7/README.md)
+
+[Lab 8: Software Drivers for an Embedded System](Lab8/README.md)
+
+[Lab 9: Temperature Data Acquisition System](Lab9/README.md)
+
+[Lab 10: DC Motor Control](Lab10/README.md)
+
+[Lab 11: Final Embedded System](Lab11/README.md)
