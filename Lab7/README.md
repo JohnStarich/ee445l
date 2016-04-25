@@ -1,4 +1,4 @@
-# Lab 7: Introduction to PCB Design
+# Lab 7: Design and Layout of an Embedded System
 
 ## Objectives
 
