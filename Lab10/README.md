@@ -30,7 +30,8 @@ A call graph showing the modules used by the DC motor controller.
 
 ## Measurement Data
 
-
+4) Maximum ISR Time is 2.05 us. Average Controller Error is 0.3 rps. Average responce time 1.8 sec.
+5) Maximum Current is 0.073A, minimum current is 0.001A.
 
 ## Analysis and Discussion
 
