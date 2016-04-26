@@ -39,15 +39,14 @@ A call graph showing the modules used by the DC motor controller.
 ## Analysis and Discussion
 
 1. Torque - The tendency of a force to rotate an object about an axis, fulcrum, or pivot. Just as a force is a push or a pull, a torque can be thought of as a twist to an object. It is units of Newton-meters or N•m
+
 2. ![DC motor coil electrical diagram](dc-motor-circuit.png)
 
-FINISH THIS ONE
-
-<<read section 6.5.4 in book or see https://www.dropbox.com/s/nslzri71ms6hkmu/LEC09.ppt>>
+The DC motor is modeled as a resistor in series with an inductor. When a load is placed on the motor, the shaft spins slower due to friction. As a consequence, the coil that is engaged in the motor is energized for a longer period of time. Because inductors act as electrical shorts the longer they are powered with a DC supply, the inductor draws more current and thus the motor draws more current.
 
 3. Current to drive the motor was the most important parameter. We had to chose the TIP120 because the 2N2222 did not provide enough current gain for the motor. The interface from the TM4C provides enough base current to the TIP120 to drive the motor.
 
 4. Direct Motor Control. We could have just calculated the PWM nescessary for each speed and set it accordingly. It would have removed jitter from the motor speed.
 
-5. 
+5. The motor is not quite spinning at a constant rate but is close. Electrical power in this lab is Volts * Amps and is given in unit Watts. For a motor, it's power is given as Torque * Angular Velocity and is also given in unit Watts. Because both electrical power and mechanical power is given in Watts, the two are linearly related with some slight power loss due to friction.
 
