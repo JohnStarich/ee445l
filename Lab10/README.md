@@ -33,3 +33,12 @@ A call graph showing the modules used by the DC motor controller.
 
 
 ## Analysis and Discussion
+
+1. Torque - The tendency of a force to rotate an object about an axis, fulcrum, or pivot. Just as a force is a push or a pull, a torque can be thought of as a twist to an object. It is units of Newton-meters or N•m
+2. DC motor coil diagram:
+![DC motor coil electrical diagram](dc-motor-circuit.png)
+
+<<read section 6.5.4 in book or see https://www.dropbox.com/s/nslzri71ms6hkmu/LEC09.ppt>>
+
+3. 
+
