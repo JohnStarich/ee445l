@@ -6,6 +6,8 @@
 
 We completed the embedded system we began in Lab 7. This lab included hardware construction, software debugging, and system evaluation.
 
+See our [requirements file](Requirements.md).
+
 ## Hardware Design
 
 ![Top Copper](top-copper.png)
