@@ -8,7 +8,7 @@
 #include "..//inc//tm4c123gh6pm.h"
 #include <stdint.h>
 
-int16_t TEC_Temp = 25;
+int16_t TEC_Temp = 10;
 
 void TEC_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x10;        // activate port E
@@ -33,13 +33,13 @@ bool TEC_Status(void){
 }
 
 void TEC_Temp_Up(void){
-	if(TEC_Temp<=30)
-	TEC_Temp += 1;
+	if(TEC_Temp>0)
+	TEC_Temp -= 1;
 }
 	
 void TEC_Temp_Down(void){
-	if(TEC_Temp>=0)
-	TEC_Temp -= 1;
+	if(TEC_Temp<30)
+	TEC_Temp += 1;
 }
 
 int16_t TEC_Get(void){

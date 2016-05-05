@@ -9,9 +9,10 @@
 void Buttons_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x20;        // 1) activate clock for Port F
   while((SYSCTL_PRGPIO_R&0x20)==0); // allow time for clock to start
-                                    // 2) no need to unlock PF0-2
-  GPIO_PORTF_PCTL_R &= ~0x0000FFFF; // 3) regular GPIO
-  GPIO_PORTF_AMSEL_R &= ~0x0F;      // 4) disable analog function on PF0-2
+  GPIO_PORTF_LOCK_R = 0x4C4F434B;	  // 2) unlock PF0-3
+  GPIO_PORTF_CR_R = 0xFF;						//		allow PF to be modified.
+	GPIO_PORTF_PCTL_R &= ~0x0000FFFF; // 3) regular GPIO
+  GPIO_PORTF_AMSEL_R &= ~0x0F;      // 4) disable analog function on PF0-3
                                     // 5) no pullup for external switches
   GPIO_PORTF_DIR_R &= ~0x0F;        // 5) set direction to input
   GPIO_PORTF_AFSEL_R &= ~0x0F;      // 6) regular port function
@@ -26,8 +27,9 @@ uint16_t debounce[3];
 
 void Buttons_ReadInput(void) {
 	int32_t data = GPIO_PORTF_DATA_R;
-	if((data & 0x08) != 0)
-		debounce[0] = ((data & 0x8) >> 3)*CYCLE_WAIT;
+	
+	if((data & 0x01) != 0)
+		debounce[0] = ((data & 0x1)     )*CYCLE_WAIT;
 	if((data & 0x02) != 0)
 		debounce[1] = ((data & 0x2) >> 1)*CYCLE_WAIT;
 	if((data & 0x04) != 0)

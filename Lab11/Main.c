@@ -62,7 +62,7 @@ void WaitForInterrupt(void);  // low power mode
 int main(void){ 
 	
 	DisableInterrupts();
-	PLL_Init(Bus10MHz);								// bus clock at 10 MHz
+	PLL_Init(Bus80MHz);								// bus clock at 10 MHz
 	Buttons_Init();
 	SysTick_Init();
 	ST7735_InitR(INITR_REDTAB);
@@ -101,11 +101,11 @@ int main(void){
 		
 		*/
 		
-		Current_Temp = (((int32_t)ADC_Sample * 5) + 4800) / 156;
+		Current_Temp = (((int32_t)ADC_Sample * 50) - 59578) / 1936;
 		
-		//if(TEC_Get() > Current_Temp) {
-		//	TEC_Stop();
-		//}
+		if(TEC_Get() > Current_Temp) {
+			TEC_Stop();
+		}
 		ST7735_SetCursor(14,3);
 		printf("%-3d",Current_Temp);
 		ST7735_SetCursor(14,4);
