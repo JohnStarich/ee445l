@@ -34,6 +34,10 @@ The Main module initialized each of its submodules and ran the display code such
 
 ## Measurement Data
 
+We measured the power usage of our system to draw approximately 1.8A in total when the TECs were active and only about 80mA when inactive.
+
+The maximum temperature the TECs could heat to was about 50°C while the lowest it could reach was about 19°C.
+
 ## Video
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=gIcv6PLDJF4" target="_blank">
